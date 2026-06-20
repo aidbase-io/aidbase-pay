@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D9E75'/%3E%3Cpath d='M16 5L6 10l10 5 10-5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M6 20l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 15l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AidBase — אישור קבלה</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#1D9E75;--tl:#E1F5EE;--td:#085041;--amber:#BA7517;--border:#E4E2DA;--muted:#6B6860;--hint:#9E9C96;--text:#1A1917;--bg:#F7F6F2;--surface:#fff;--r:8px;--font:'DM Sans',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+
+/* Top bar AidBase */
+.top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;direction:ltr}
+.top-logo{display:flex;align-items:center;gap:8px}
+.top-mark{width:28px;height:28px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-mark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.top-name{font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+
+/* Org banner full width */
+.org-banner{display:none;width:100%;background:var(--surface);border-bottom:1px solid var(--border);overflow:hidden}
+.org-banner img{width:100%;max-height:100px;object-fit:contain;display:block}
+
+.wrap{max-width:580px;margin:0 auto;padding:24px 20px 60px}
+
+/* Project badge */
+.proj-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:16px}
+
+/* Header */
+.hd{margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--teal)}
+.hd h1{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.hd-date{font-size:13px;color:var(--muted)}
+
+/* ID field */
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;letter-spacing:.03em;text-transform:uppercase;direction:rtl}
+.fr{color:var(--teal)}
+.fi{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:14px;font-family:var(--font);outline:none;transition:.15s border-color;direction:rtl}
+.fi:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.fi-ltr{direction:ltr;text-align:left}
+
+/* ID banner */
+.id-banner{display:none;background:var(--tl);border:1px solid var(--teal);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--td);align-items:center;gap:8px;direction:rtl}
+.id-banner.show{display:flex}
+
+/* Person card */
+.person-card{background:var(--bg);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:none;direction:rtl}
+.person-card.show{display:block}
+.person-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.person-lbl{font-size:10px;font-weight:600;color:var(--hint);text-transform:uppercase;display:block;margin-bottom:2px;letter-spacing:.04em}
+.badge{display:inline-flex;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+
+/* New person banner */
+.new-banner{display:none;background:#FAEEDA;border:1px solid var(--amber);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--amber)}
+.new-banner.show{display:block}
+.new-fields{display:none}.new-fields.show{display:block}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center;padding-left:28px}
+
+/* Already signed */
+.already-banner{display:none;background:var(--tl);border:1px solid var(--teal);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--td)}
+.already-banner.show{display:block}
+
+/* Declaration */
+.declaration{background:#F7F6F2;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:16px;direction:rtl}
+.declaration-title{font-size:13px;font-weight:700;margin-bottom:10px}
+.declaration-text{font-size:12.5px;line-height:1.85;color:var(--text)}
+.declaration-text p{margin-bottom:7px}
+.declaration-text p:last-child{margin-bottom:0}
+
+/* Signature */
+.sig-section{display:none}.sig-section.show{display:block}
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+.sig-wrap{border:1.5px dashed var(--border);border-radius:var(--r);background:#fff;overflow:hidden;position:relative;touch-action:none}
+.sig-wrap canvas{display:block;cursor:crosshair;width:100%;height:150px}
+.sig-hint{position:absolute;bottom:8px;right:50%;transform:translateX(50%);font-size:11px;color:#bbb;pointer-events:none;white-space:nowrap}
+.btn-clear{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--font);margin-top:8px}
+
+/* Donation note */
+.donation-note{background:var(--tl);border:1px solid #9FE1CB;border-radius:10px;padding:14px 18px;margin-top:14px}
+
+/* Submit button */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 20px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;cursor:pointer;font-size:15px;font-family:var(--font);font-weight:600;width:100%;transition:.15s;margin-top:16px}
+.btn:hover{background:var(--td)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+.note{font-size:11px;color:var(--hint);text-align:center;margin-top:10px;line-height:1.5}
+
+/* Success */
+.success{display:none;text-align:center;padding:40px 20px}.success.show{display:block}
+.ok-wrap{width:64px;height:64px;background:var(--tl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.ok-wrap svg{width:30px;height:30px;stroke:var(--teal);fill:none;stroke-width:2.5;stroke-linecap:round}
+.success h2{font-size:20px;font-weight:700;margin-bottom:8px}
+
+/* Not found */
+.not-found{text-align:center;padding:60px 20px;display:none}
+.not-found.show{display:block}
+
+/* Toast & loader */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.12);display:none;white-space:nowrap}
+.tok{background:#E1F5EE;color:#085041;border:1px solid #5DCAA5}
+.ter{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595}
+.toast.show{display:block}
+.loader{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1D9E75,#5DCAA5,#1D9E75);background-size:200%;animation:sh 1.2s infinite;z-index:9999;display:none}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div id="loader" class="loader"></div>
+<div id="toast" class="toast"></div>
+
+<!-- AidBase top bar -->
+<div class="top-bar">
+  <div class="top-logo">
+    <div class="top-mark" id="top-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <span class="top-name">AidBase</span>
+  </div>
+</div>
+
+<!-- Organization banner full width -->
+<div class="org-banner" id="org-banner">
+  <img id="org-banner-img" src="" alt="לוגו הארגון"/>
+</div>
+
+<div class="wrap">
+
+  <!-- Not found -->
+  <div class="not-found" id="not-found" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">⚠️</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">הפרויקט לא נמצא</h2>
+    <p style="color:var(--muted);font-size:14px">הקישור שבו השתמשת אינו תקין.</p>
+  </div>
+
+  <!-- Main form -->
+  <div id="main-wrap" style="display:none">
+
+    <div id="proj-badge" class="proj-badge"></div>
+
+    <div class="hd">
+      <h1 id="form-title">✅ אישור קבלה</h1>
+      <div class="hd-date" id="form-date"></div>
+    </div>
+
+    <div id="form-fields">
+
+      <!-- ID field -->
+      <div class="fg">
+        <label class="fl">מספר תעודת זהות / דרכון <span class="fr">*</span></label>
+        <input class="fi fi-ltr" id="doc" type="text" placeholder="הזן מספר תעודת זהות או דרכון" autocomplete="off" oninput="onDocInput()"/>
+      </div>
+
+      <!-- Identified banner -->
+      <div class="id-banner" id="id-banner">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="banner-text">זוהית בהצלחה</span>
+      </div>
+
+      <!-- Person card -->
+      <div class="person-card" id="person-card">
+        <div class="person-grid">
+          <div><span class="person-lbl">שם פרטי</span><span id="p-name" style="font-weight:600"></span></div>
+          <div><span class="person-lbl">שם משפחה</span><span id="p-lastname" style="font-weight:600"></span></div>
+          <div><span class="person-lbl">מספר מסמך</span><span id="p-doc" style="font-family:monospace;direction:ltr"></span></div>
+          <div><span class="person-lbl">עיר</span><span id="p-city"></span></div>
+          <div><span class="person-lbl">ילדים</span><span id="p-children"></span></div>
+          <div><span class="person-lbl">מצב משפחתי</span><span id="p-status" class="badge"></span></div>
+        </div>
+      </div>
+
+      <!-- Already signed -->
+      <div class="already-banner" id="already-banner">
+        ✓ כבר חתמת עבור פרויקט זה בתאריך זה. קבלתך נרשמה.
+      </div>
+
+      <!-- New person banner -->
+      <div class="new-banner" id="new-banner">
+        ⚠️ המספר לא נמצא במערכת. אנא מלא את פרטיך להרשמה.
+      </div>
+
+      <!-- New person fields -->
+      <div class="new-fields" id="new-fields">
+        <div class="frow">
+          <div class="fg"><label class="fl">שם פרטי <span class="fr">*</span></label><input class="fi" id="fn" type="text" placeholder="שם פרטי"/></div>
+          <div class="fg"><label class="fl">שם משפחה <span class="fr">*</span></label><input class="fi" id="ln" type="text" placeholder="שם משפחה"/></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">טלפון</label><input class="fi fi-ltr" id="tel" type="tel" placeholder="+972..."/></div>
+          <div class="fg"><label class="fl">עיר</label><input class="fi" id="city" type="text" placeholder="עיר מגורים"/></div>
+        </div>
+        <div class="fg"><label class="fl">כתובת</label><input class="fi" id="addr" type="text" placeholder="רחוב, מספר"/></div>
+        <div class="frow">
+          <div class="fg">
+            <label class="fl">מצב משפחתי <span class="fr">*</span></label>
+            <select class="fi fsel" id="status">
+              <option value="">בחר...</option>
+              <option value="single-parent">הורה יחיד</option>
+              <option value="pensioner">פנסיונר/ית</option>
+              <option value="parent-minors">הורה עם ילדים מתחת לגיל 18</option>
+              <option value="couple">זוג</option>
+              <option value="young-couple">זוג צעיר</option>
+              <option value="ukraine-refugee">פליט/ה מאוקראינה</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">מספר ילדים <span class="fr">*</span></label>
+            <select class="fi fsel" id="children">
+              <option value="">בחר...</option>
+              <option value="0">0 — ללא ילדים</option>
+              <option value="1">ילד 1</option>
+              <option value="2">2 ילדים</option>
+              <option value="3">3 ילדים</option>
+              <option value="4">4 ילדים</option>
+              <option value="5+">5 ומעלה</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature section -->
+      <div class="sig-section" id="sig-section">
+        <hr class="divider"/>
+
+        <!-- Declaration -->
+        <div class="declaration">
+          <div class="declaration-title">תצהיר המשתתפים:</div>
+          <div class="declaration-text">
+            <p>1. אני מאשר/ת ומצהיר בזאת כי כל הפרטים שמסרתי לעיל ובשאלון זה נכונים, מלאים ומעודכנים.</p>
+            <p>2. אני מצהיר/ה כי הנני מקבל את הסיוע האמור תוך נדיבות ליבה של עמותת ״עיר החיים״ (ע״ר) וכי הסיוע כאמור הוענק לי עקב הצורך שלי ולאור בקשתי ולא כתובת הנאה אשר נבעה משכנוע ו/או שידול על מנת להמיר את דתי.</p>
+            <p>3. אני מאשר בזאת לעמותת ״עיר החיים״ (ע״ר) להעביר כל מידע ו/או צילומים ו/או מסמכים ולרבות שאלון זה לכל גורם שהוא בכל דרך שהיא בקשר לשאלון זה ו/או בקשר לסיוע שם וככל שיינתן לי.</p>
+            <p>4. אני מצהיר כי עמותת ״עיר החיים״ (ע״ר) לא פעלה בכל צורה בניגוד לרצוני וכי כל פעולה שהתבצעה על ידי הגופים הנ״ל נעשתה מרצוני וכי לא יהיו לי כל טענות ו/או תביעות משפטיות כנגד הגופים הנ״ל.</p>
+            <p>5. אני מתחייב בזאת שכל סיוע שיתקבל, הוא אך ורק עבורי, ואין הסיוע עבור צד שלישי.</p>
+            <p>6. אני מצהיר כי זהו שמי, זו חתימתי ותוכן תצהירי אמת.</p>
+          </div>
+        </div>
+
+        <!-- Signature pad -->
+        <div class="fg">
+          <label class="fl">חתימה דיגיטלית <span class="fr">*</span></label>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">צייר את חתימתך למטה לאישור קבלת הסיוע.</p>
+          <div class="sig-wrap" id="sig-wrap">
+            <canvas id="sig-canvas"></canvas>
+            <span class="sig-hint" id="sig-hint">חתימה כאן</span>
+          </div>
+          <button class="btn-clear" onclick="clearSig()">✕ נקה חתימה</button>
+        </div>
+
+        <button class="btn" id="submit-btn" onclick="submitForm()">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          אשר קבלה וחתום
+        </button>
+        <p class="note">בחתימתך אתה מאשר קבלת הסיוע עבור פרויקט זה.</p>
+
+        <!-- Donation note -->
+        <div class="donation-note">
+          <p style="font-size:12.5px;color:var(--td);line-height:1.75;direction:rtl;margin-bottom:8px">
+            שי זה ניתן כתרומה, ללא תנאי ובלי כוונת של כפיה או השפעה דתית והתקבל באותה דרך
+          </p>
+          <p style="font-size:12.5px;color:var(--td);line-height:1.75;direction:ltr;text-align:left">
+            Этот подарок предоставлен в качестве пожертвования, без каких-либо условий и без намерения принуждения или религиозного влияния, и был принят на тех же условиях.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- end form-fields -->
+
+    <!-- Success -->
+    <div class="success" id="success">
+      <div class="ok-wrap"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>הקבלה נרשמה בהצלחה!</h2>
+      <p id="ok-name" style="font-weight:600;color:var(--text);margin-bottom:8px"></p>
+      <p style="color:var(--muted);font-size:14px">חתימתך נשמרה. תודה רבה.</p>
+    </div>
+
+  </div><!-- end main-wrap -->
+</div><!-- end wrap -->
+
+<script>
+const SUPABASE_URL='https://ynpacufijpcumloodjir.supabase.co';
+const SUPABASE_KEY='sb_publishable_EyDKwtYUHdAWhSauesA90A_SO-Xv-FT';
+const COLORS=['#1D9E75','#185FA5','#BA7517','#534AB7','#D4537E'];
+const SL={'single-parent':'הורה יחיד','pensioner':'פנסיונר/ית','parent-minors':'הורה עם קטינים','couple':'זוג','young-couple':'זוג צעיר','ukraine-refugee':'פליט/ה מאוקראינה'};
+const SC={'single-parent':['#E1F5EE','#085041'],'pensioner':['#E6F1FB','#0C447C'],'parent-minors':['#FAEEDA','#633806'],'couple':['#FBEAF0','#72243E'],'young-couple':['#EAF3DE','#27500A'],'ukraine-refugee':['#EEEDFE','#3C3489']};
+
+let projId=null, projData=null, foundPerson=null;
+let sigCtx=null, sigDrawing=false, sigHasData=false, docTimer=null;
+
+async function sb(path,opts={}){
+  const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})},
+    ...opts
+  });
+  const t=await r.text();
+  if(!r.ok)throw new Error(t);
+  return t?JSON.parse(t):[];
+}
+
+function loading(on){document.getElementById('loader').style.display=on?'block':'none';}
+function showToast(msg,type='tok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function loadBranding(){
+  // Try localStorage first
+  const saved=localStorage.getItem('aidbase_settings');
+  if(saved){
+    try{
+      const s=JSON.parse(saved);
+      if(s.logo){
+        document.getElementById('org-banner-img').src=s.logo;
+        document.getElementById('org-banner').style.display='block';
+        return;
+      }
+    }catch(e){}
+  }
+}
+
+async function initPage(){
+  loadBranding();
+  const params=new URLSearchParams(window.location.search);
+  projId=params.get('project');
+  if(!projId){
+    const nf=document.getElementById('not-found');
+    if(nf){
+      nf.style.display='block';
+      const h=nf.querySelector('h2');
+      const p=nf.querySelector('p');
+      if(h)h.textContent='קישור לא תקין';
+      if(p)p.innerHTML='יש להשתמש בקישור עם שם הפרויקט:<br/><code style="font-size:12px;color:var(--teal)">/sign-food-basket.html?project=basket</code>';
+    }
+    return;
+  }
+  loading(true);
+  try{
+    const rows=await sb('projects?select=*&id=eq.'+encodeURIComponent(projId));
+    if(!rows.length){document.getElementById('not-found').classList.add('show');return;}
+    projData=rows[0];
+    // Badge
+    const badge=document.getElementById('proj-badge');
+    badge.textContent=projData.icon+' '+projData.name;
+    badge.style.background=projData.color+'22';
+    badge.style.color=projData.color;
+    // Title with color
+    document.getElementById('top-mark').style.background=projData.color;
+    document.title='אישור קבלה — '+projData.name;
+    // Date
+    const now=new Date();
+    document.getElementById('form-date').textContent=now.toLocaleDateString('he-IL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('main-wrap').style.display='block';
+    console.log('Form loaded for project:', projId, projData.name);
+  }catch(e){
+    console.error('initPage error:', e);
+    const nf=document.getElementById('not-found');
+    if(nf){
+      nf.style.display='block';
+      const p=nf.querySelector('p');
+      if(p)p.textContent='שגיאה: '+e.message;
+    }
+  }
+  finally{loading(false);}
+}
+
+function onDocInput(){
+  clearTimeout(docTimer);
+  const doc=document.getElementById('doc').value.trim();
+  hide('id-banner','person-card','already-banner','new-banner','new-fields','sig-section');
+  foundPerson=null;
+  if(doc.length<4)return;
+  docTimer=setTimeout(()=>lookupDoc(doc),600);
+}
+
+async function lookupDoc(doc){
+  loading(true);
+  try{
+    const rows=await sb('people?select=*&document=eq.'+encodeURIComponent(doc));
+    if(rows.length){
+      foundPerson=rows[0];
+      const p=foundPerson;
+      const [bg,tc]=SC[p.family_status]||['#eee','#333'];
+      document.getElementById('p-name').textContent=p.first_name||'—';
+      document.getElementById('p-lastname').textContent=p.last_name||'—';
+      document.getElementById('p-doc').textContent=p.document;
+      document.getElementById('p-city').textContent=p.city||'—';
+      document.getElementById('p-children').textContent=p.children==='0'?'ללא ילדים':(p.children||'—');
+      const st=document.getElementById('p-status');
+      st.textContent=SL[p.family_status]||p.family_status||'—';
+      st.style.background=bg;st.style.color=tc;
+      document.getElementById('banner-text').textContent='✓ זוהית: '+p.first_name+' '+p.last_name;
+      show('id-banner','person-card');
+      hide('new-banner','new-fields');
+      // Check if already has a real signature (sig_data not null = actual signature, not just pre-registration)
+      const existSig=await sb('signatures?select=id,sig_data&person_id=eq.'+p.id+'&project_id=eq.'+projId);
+      const hasRealSig=existSig.length>0 && !!existSig[0].sig_data;
+      if(hasRealSig){
+        show('already-banner');
+      } else {
+        show('sig-section');
+        setTimeout(initSig,100);
+      }
+    } else if(doc.length>=6){
+      hide('id-banner','person-card','already-banner');
+      show('new-banner','new-fields','sig-section');
+      setTimeout(initSig,100);
+    }
+  }catch(e){showToast('שגיאה: '+e.message,'ter');}
+  finally{loading(false);}
+}
+
+function show(...ids){ids.forEach(id=>{const e=document.getElementById(id);if(e){e.classList.add('show');if(e.style.display==='none')e.style.display='';}});}
+function hide(...ids){ids.forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('show');});}
+
+function initSig(){
+  const canvas=document.getElementById('sig-canvas');if(!canvas)return;
+  const wrap=document.getElementById('sig-wrap');
+  canvas.width=wrap.offsetWidth||540;canvas.height=150;
+  sigCtx=canvas.getContext('2d');
+  sigCtx.clearRect(0,0,canvas.width,canvas.height);
+  sigCtx.strokeStyle='#1A1917';sigCtx.lineWidth=2.2;sigCtx.lineCap='round';sigCtx.lineJoin='round';
+  sigHasData=false;
+  const hint=document.getElementById('sig-hint');
+  function pos(e){const r=canvas.getBoundingClientRect();const sx=canvas.width/r.width,sy=canvas.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
+  canvas.onmousedown=e=>{sigDrawing=true;sigHasData=true;const p=pos(e);sigCtx.beginPath();sigCtx.moveTo(p.x,p.y);if(hint)hint.style.display='none';};
+  canvas.onmousemove=e=>{if(!sigDrawing)return;const p=pos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();};
+  canvas.onmouseup=()=>sigDrawing=false;canvas.onmouseleave=()=>sigDrawing=false;
+  canvas.ontouchstart=e=>{e.preventDefault();sigDrawing=true;sigHasData=true;const p=pos(e);sigCtx.beginPath();sigCtx.moveTo(p.x,p.y);if(hint)hint.style.display='none';};
+  canvas.ontouchmove=e=>{e.preventDefault();if(!sigDrawing)return;const p=pos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();};
+  canvas.ontouchend=()=>sigDrawing=false;
+}
+
+function clearSig(){
+  if(sigCtx){sigCtx.clearRect(0,0,document.getElementById('sig-canvas').width,150);sigHasData=false;const h=document.getElementById('sig-hint');if(h)h.style.display='';}
+}
+
+async function submitForm(){
+  const doc=document.getElementById('doc').value.trim();
+  if(!doc){showToast('אנא הזן מספר תעודת זהות.','ter');return;}
+  if(!sigHasData){showToast('אנא צייר את חתימתך.','ter');return;}
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;loading(true);
+  try{
+    let person=foundPerson;
+    if(!person){
+      const fn=document.getElementById('fn').value.trim();
+      const ln=document.getElementById('ln').value.trim();
+      const status=document.getElementById('status').value;
+      const children=document.getElementById('children').value;
+      if(!fn||!ln||!status||!children){showToast('אנא מלא את כל השדות החובה.','ter');return;}
+      const ins=await sb('people',{method:'POST',body:JSON.stringify([{
+        first_name:fn,last_name:ln,document:doc,
+        phone:document.getElementById('tel').value.trim(),
+        city:document.getElementById('city').value.trim(),
+        address:document.getElementById('addr').value.trim(),
+        family_status:status,children,
+        color:COLORS[Math.floor(Math.random()*COLORS.length)]
+      }])});
+      person=ins[0];
+    }
+    const canvas=document.getElementById('sig-canvas');
+    const sigData=canvas.toDataURL('image/png');
+    const now=new Date();
+    const dateStr=now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const hash=Array.from({length:48},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+    // Check for existing pre-registration record (sig_data is null)
+    const preReg=await sb('signatures?select=id,sig_data&person_id=eq.'+person.id+'&project_id=eq.'+projId);
+    if(preReg.length>0 && !preReg[0].sig_data){
+      // Update the pre-registration record with the real signature
+      await sb('signatures?id=eq.'+preReg[0].id,{
+        method:'PATCH',
+        headers:{'Prefer':'return=minimal','Content-Type':'application/json'},
+        body:JSON.stringify({signed_at:dateStr,hash,sig_data:sigData,status:'signed'})
+      });
+    } else if(preReg.length===0){
+      // No pre-reg record — insert new signature
+      await sb('signatures',{method:'POST',body:JSON.stringify([{
+        person_id:person.id,project_id:projId,
+        signed_at:dateStr,hash,sig_data:sigData
+      }])});
+    }
+    // If preReg exists with sig_data — already signed, do nothing (shouldn't reach here)
+    document.getElementById('ok-name').textContent=person.first_name+' '+person.last_name+' — '+doc;
+    document.getElementById('form-fields').style.display='none';
+    document.getElementById('success').classList.add('show');
+    showToast('החתימה נשמרה בהצלחה!');
+  }catch(e){showToast('שגיאה: '+e.message,'ter');}
+  finally{btn.disabled=false;loading(false);}
+}
+
+initPage();
+</script>
+  <div style="text-align:center;padding:24px 0 32px;border-top:1px solid var(--border);margin-top:32px">
+    <a href="https://aidbase.netlify.app/landing.html" target="_blank" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;opacity:.6;transition:.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">
+      <div style="width:20px;height:20px;background:#1D9E75;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#6B6860">Powered by AidBase</span>
+    </a>
+  </div>
+</body>
+</html>
