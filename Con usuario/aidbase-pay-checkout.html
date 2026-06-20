@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AidBase Pay — תשלום</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --navy: #1e2a3a;
+    --navy-light: #2d3f52;
+    --blue: #1a56db;
+    --blue-light: #4fa3ff;
+    --blue-pale: #e8f0fe;
+    --success: #0f9d58;
+    --danger: #d92d20;
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #64748b;
+    --gray-800: #1e293b;
+    --text: #0f172a;
+    --radius: 14px;
+    --radius-lg: 24px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --font: 'Inter', 'Segoe UI', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { 
+    font-family: var(--font); 
+    color: var(--text); 
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--blue-pale) 100%);
+    direction: rtl; 
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  .checkout-header {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: var(--white);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .checkout-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .checkout-header p {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  /* ===== CONTENT ===== */
+  .checkout-content {
+    padding: 32px 24px;
+  }
+
+  /* Event Summary */
+  .event-summary {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .event-summary h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+
+  .event-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--gray-600);
+  }
+
+  .event-detail:last-child {
+    margin-bottom: 0;
+  }
+
+  .event-detail-value {
+    font-weight: 600;
+    color: var(--blue);
+    font-size: 28px;
+  }
+
+  /* Form Group */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: var(--font);
+    font-size: 14px;
+    transition: all 0.2s;
+    direction: ltr;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* Price Breakdown */
+  .price-breakdown {
+    background: var(--blue-pale);
+    border: 1px solid #d0e1f9;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--navy);
+  }
+
+  .price-row:last-child {
+    margin-bottom: 0;
+    border-top: 1px solid #d0e1f9;
+    padding-top: 8px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .price-label {
+    color: var(--gray-600);
+  }
+
+  /* Button */
+  .btn-pay {
+    width: 100%;
+    padding: 14px;
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(26, 86, 219, 0.35);
+  }
+
+  .btn-pay:hover:not(:disabled) {
+    background: #1341b0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 86, 219, 0.4);
+  }
+
+  .btn-pay:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-pay:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Loading State */
+  .loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 8px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Alert */
+  .alert {
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .alert.show {
+    display: block;
+  }
+
+  .alert-error {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: var(--danger);
+  }
+
+  .alert-success {
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: var(--success);
+  }
+
+  /* Footer */
+  .checkout-footer {
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-600);
+  }
+
+  .checkout-footer a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  .checkout-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container {
+      margin: 20px auto;
+    }
+
+    .checkout-header h1 {
+      font-size: 20px;
+    }
+
+    .checkout-content {
+      padding: 24px 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="checkout-header">
+    <h1>תשלום למאורע</h1>
+    <p>AidBase Pay — סליקה בטוחה</p>
+  </div>
+
+  <!-- Content -->
+  <div class="checkout-content">
+    <!-- Alert -->
+    <div class="alert alert-error" id="alertError"></div>
+    <div class="alert alert-success" id="alertSuccess"></div>
+
+    <!-- Event Summary -->
+    <div class="event-summary">
+      <h3 id="eventName">טוען...</h3>
+      <div class="event-detail">
+        <span class="event-detail-value" id="eventPrice">₪0.00</span>
+      </div>
+    </div>
+
+    <!-- Price Breakdown -->
+    <div class="price-breakdown">
+      <div class="price-row">
+        <span>סה"כ לתשלום:</span>
+        <span id="breakdownTotal">₪0.00</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="checkoutForm">
+      <!-- Submit Button -->
+      <button type="submit" class="btn-pay" id="submitBtn">
+        <span id="btnText">המשך לתשלום</span>
+        <span class="loading-spinner" id="spinner" style="display: none;"></span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="checkout-footer">
+    <p>📱 תשלום מאובטח על ידי <strong>PayMe</strong></p>
+    <p>כל הנתונים מוצפנים ומאובטחים</p>
+  </div>
+</div>
+
+<script>
+  // ===== CONFIG =====
+  const NETLIFY_FUNCTION_URL = '/.netlify/functions/generate-payment';
+
+  // ===== EVENT PARAMETERS =====
+  const urlParams = new URLSearchParams(window.location.search);
+  const eventData = {
+    eventId: urlParams.get('eventId') || 'kaitana-2026',
+    eventName: urlParams.get('eventName') || 'קייטנה',
+    eventPrice: parseFloat(urlParams.get('price') || '5'), // en shekalim
+    eventDesc: urlParams.get('desc') || 'קייטנה',
+    productName: urlParams.get('productName') || 'קייטנה'
+  };
+
+  // ===== INITIALIZE =====
+  function initCheckout() {
+    // Update event details
+    document.getElementById('eventName').textContent = eventData.eventName;
+    document.getElementById('eventPrice').textContent = `₪${eventData.eventPrice.toFixed(2)}`;
+
+    // Update price breakdown
+    updatePriceBreakdown();
+  }
+
+  function updatePriceBreakdown() {
+    const price = eventData.eventPrice;
+    document.getElementById('breakdownTotal').textContent = `₪${price.toFixed(2)}`;
+  }
+
+  // ===== FORM SUBMIT =====
+  document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Disable button
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    submitBtn.disabled = true;
+    spinner.style.display = 'inline-block';
+
+    try {
+      // Call Netlify Function
+      const response = await fetch(NETLIFY_FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventId: eventData.eventId,
+          eventName: eventData.eventName,
+          eventPrice: eventData.eventPrice,
+          productName: eventData.productName
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.sale_url) {
+        // Success - redirect to PayMe payment page
+        showAlert('alert-success', '✅ הפניה לעמוד התשלום...');
+        setTimeout(() => {
+          window.location.href = data.sale_url;
+        }, 1500);
+      } else {
+        // Error
+        showAlert('alert-error', `❌ שגיאה: ${data.error || 'Unknown error'}`);
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showAlert('alert-error', `❌ שגיאה בתקשורת: ${error.message}`);
+      submitBtn.disabled = false;
+      spinner.style.display = 'none';
+    }
+  });
+
+  // ===== SHOW ALERT =====
+  function showAlert(type, message) {
+    const alertError = document.getElementById('alertError');
+    const alertSuccess = document.getElementById('alertSuccess');
+
+    if (type === 'alert-error') {
+      alertError.textContent = message;
+      alertError.classList.add('show');
+      alertSuccess.classList.remove('show');
+    } else {
+      alertSuccess.textContent = message;
+      alertSuccess.classList.add('show');
+      alertError.classList.remove('show');
+    }
+  }
+
+  // ===== ON LOAD =====
+  document.addEventListener('DOMContentLoaded', initCheckout);
+</script>
+
+</body>
+</html>
