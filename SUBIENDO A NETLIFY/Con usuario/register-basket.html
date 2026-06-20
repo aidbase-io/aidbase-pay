@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D9E75'/%3E%3Cpath d='M16 5L6 10l10 5 10-5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M6 20l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 15l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AidBase — הרשמה לחלוקת סלי מזון</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#1D9E75;--tl:#E1F5EE;--td:#085041;--amber:#BA7517;--al:#FAEEDA;--border:#E4E2DA;--muted:#6B6860;--hint:#9E9C96;--text:#1A1917;--bg:#F7F6F2;--surface:#fff;--r:8px;--font:'DM Sans',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+
+/* ── Top header bar ── */
+.top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;direction:ltr}
+.top-bar-logo{display:flex;align-items:center;gap:8px}
+.top-bar-mark{width:28px;height:28px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.top-bar-mark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.top-bar-name{font-size:15px;font-weight:700;letter-spacing:-.02em}
+
+/* ── Hero banner ── */
+.hero{width:100%;background:linear-gradient(135deg,#F3E3C8,#EAD3AC);padding:0;text-align:center}
+.hero img{width:100%;max-height:220px;object-fit:cover;display:block}
+.hero-text{padding:18px 20px}
+.hero h1{font-size:19px;font-weight:700;line-height:1.5;max-width:640px;margin:0 auto}
+.hero .ru{font-size:17px}
+
+/* ── Form wrap ── */
+.wrap{max-width:600px;margin:0 auto;padding:24px 20px 60px;width:100%}
+
+/* ── Info card ── */
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 18px;margin-bottom:18px;font-size:13px;line-height:1.8;color:var(--text)}
+.info-card b{font-weight:700}
+.info-card .ru{color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.info-card .req{color:#A32D2D}
+.info-card ul{margin:6px 0 6px 0;padding-right:20px}
+.info-card li{margin-bottom:2px}
+
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.section-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;letter-spacing:.03em;text-transform:uppercase}
+.fr{color:var(--teal)}
+.fi{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:14px;font-family:var(--font);outline:none;transition:.15s border-color}
+.fi:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* ── Radio cards ── */
+.rgroup{display:flex;flex-direction:column;gap:8px}
+.rcard{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:.15s all;font-size:13px;line-height:1.5}
+.rcard:hover{border-color:var(--teal);background:var(--tl)}
+.rcard input{margin-top:3px;accent-color:var(--teal);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.rcard.checked{border-color:var(--teal);background:var(--tl)}
+.rcard .ru{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+
+/* ── Children scale ── */
+.cscale{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+@media(max-width:480px){.cscale{grid-template-columns:repeat(4,1fr)}}
+.cbtn{display:flex;align-items:center;justify-content:center;padding:10px 0;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:14px;font-weight:600;transition:.15s all;background:var(--surface)}
+.cbtn:hover{border-color:var(--teal)}
+.cbtn.sel{border-color:var(--teal);background:var(--teal);color:#fff}
+
+/* ── Consent box ── */
+.consent-box{background:var(--al);border:1px solid #E8D2A8;border-radius:var(--r);padding:14px 16px;font-size:12px;line-height:1.8;color:var(--text);margin-bottom:14px}
+.consent-box h4{font-size:12px;font-weight:700;margin:10px 0 4px}
+.consent-box h4:first-child{margin-top:0}
+.consent-check{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:2px solid var(--teal);border-radius:var(--r);background:var(--tl);cursor:pointer;margin-top:12px}
+.consent-check input{margin-top:2px;accent-color:var(--teal);width:18px;height:18px;flex-shrink:0;cursor:pointer}
+.consent-check span{font-size:13px;font-weight:600}
+
+/* ── Disqualify ── */
+.disq{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center}
+.disq.show{display:block}
+.disq h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.disq p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:8px;text-align:right}
+.disq .ru{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* ── Multi-page navigation (Google Forms style) ── */
+.progress-wrap{margin-bottom:18px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .25s ease;width:25%}
+.progress-text{font-size:11px;color:var(--hint);text-align:center}
+.fpage{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fnav{display:flex;gap:10px;margin-top:6px}
+.fnav .btn{width:auto;flex:1}
+.btn-back{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-back:hover{background:var(--bg);border-color:var(--hint)}
+.btn-back svg{stroke:var(--text)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;cursor:pointer;font-size:15px;font-family:var(--font);font-weight:600;width:100%;transition:.15s all}
+.btn:hover{background:var(--td)}.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+.note{font-size:11px;color:var(--hint);text-align:center;margin-top:10px;line-height:1.5}
+
+/* ── Success ── */
+.success{display:none;text-align:center;padding:40px 20px}
+.success.show{display:block}
+.ok-wrap{width:64px;height:64px;background:var(--tl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.ok-wrap svg{width:30px;height:30px;stroke:var(--teal);fill:none;stroke-width:2.5;stroke-linecap:round}
+.success h2{font-size:20px;font-weight:700;margin-bottom:8px}
+
+/* ── Toast & loader ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:opacity .3s;box-shadow:0 4px 12px rgba(0,0,0,.12);display:none}
+.toast.ok{background:#E1F5EE;color:#085041;border:1px solid #5DCAA5}
+.toast.err{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595}
+.loader{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1D9E75,#5DCAA5,#1D9E75);background-size:200%;animation:sh 1.2s infinite;z-index:9999;display:none}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* doc exists banner (legacy, kept for compatibility) */
+.doc-exists{display:none;background:#FCEBEB;border:1px solid #F09595;border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#A32D2D}
+
+/* identified person — confirm card */
+.id-confirm{display:none;background:var(--surface);border:2px solid var(--teal);border-radius:var(--r);padding:18px;margin-top:10px;margin-bottom:14px}
+.id-confirm.show{display:block}
+.id-confirm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:16px}
+.id-confirm-label{font-size:10px;font-weight:600;color:var(--hint);text-transform:uppercase;margin-bottom:2px}
+.id-confirm-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn-confirm-ok{flex:1;padding:10px;border-radius:8px;border:none;background:var(--teal);color:#fff;font-size:14px;font-family:var(--font);font-weight:600;cursor:pointer}
+.btn-confirm-edit{flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:14px;font-family:var(--font);cursor:pointer;color:var(--text)}
+
+/* already received this month */
+.month-already{display:none;background:var(--al);border:1px solid #E8D2A8;border-radius:var(--r);padding:16px 18px;margin-bottom:14px;font-size:13px;color:#633806;line-height:1.7}
+.month-already.show{display:block}
+</style>
+</head>
+<body>
+<div id="loader" class="loader"></div>
+<div id="toast" class="toast"></div>
+
+<!-- AidBase top bar -->
+<div class="top-bar">
+  <div class="top-bar-logo">
+    <div class="top-bar-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <span class="top-bar-name">AidBase</span>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <img src="basket-banner.jpg" alt="סלי מזון"/>
+  <div class="hero-text">
+    <h1>
+      חלקת סלי מזון לעולים חדשים עד גיל 5 בארץ<br/>
+      <span class="ru">Продуктовые наборы для Новых Репатриантов до 5ти лет в стране</span>
+    </h1>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div id="form-wrap">
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text">עמוד 1 מתוך 4 &nbsp;·&nbsp; Страница 1 из 4</div>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div class="fpage" data-page="1">
+    <!-- Intro / event info -->
+    <div class="info-card">
+      <div><b>עולים חדשים יקרים!</b></div>
+      <div style="margin-top:6px">
+        קהילת המשיחיים "עיר החיים" מארגנת פרויקט חלוקת סלי מזון לעולים חדשים עד 5 שנים בארץ.
+        העזרה ניתנת לתמיכה בעולים החדשים בתקופה הראשונה בארץ.
+      </div>
+      <div style="margin-top:10px"><b>תנאי קבלת הסיוע:</b></div>
+      <ul>
+        <li><b>חלוקה רק לאחר הרשמה מראש.</b></li>
+        <li><b>חובה להציג תעודת זהות (תעודת זהות ישראלית) וספח.</b></li>
+        <li>קבלת סל אחת למשפחה אחת בלבד.</li>
+      </ul>
+      <div style="margin-top:8px">
+        📆 תאריך: יום ראשון, 21 ביוני 2026<br/>
+        ⌚ שעה: 17:30<br/>
+        📍 כתובת: רחוב ניס 15, אזור תעשייה, שדרות<br/>
+        Google Maps: <a href="https://goo.gl/maps/NtXxDCZ5wFR2" target="_blank" style="color:var(--teal)">goo.gl/maps/NtXxDCZ5wFR2</a><br/>
+        Waze: <a href="https://waze.com/ul/hsv8e7ddj3" target="_blank" style="color:var(--teal)">waze.com/ul/hsv8e7ddj3</a>
+      </div>
+      <div style="margin-top:8px">
+        ☎ טלפון: 077-4220270 (בימי ראשון עד שישי, 9:00–15:00)<br/>
+        📱 WhatsApp: 054-6389003 (רק הודעות טקסט)<br/>
+        📧 אימייל: info@clm-israel.org
+      </div>
+
+      <div class="ru">
+        <div><b>Дорогие Новые Репатрианты!</b></div>
+        <div style="margin-top:6px">
+          Мессианская община «Город жизни» проводит раздачу продуктовых наборов для новых репатриантов до 5ти лет в Стране.
+          Раздача проводится в поддержку новых репатриантов в начальный период проживания в Израиле.
+        </div>
+        <div style="margin-top:10px"><b>Условия получения помощи:</b></div>
+        <ul>
+          <li><b>Выдача только по предварительной регистрации.</b></li>
+          <li><b>Предъявление Теудат Зеут и Сефах обязательно.</b></li>
+          <li>Выдача одного продуктового набора на одну семью.</li>
+        </ul>
+        <div style="margin-top:8px">
+          📆 Дата: Воскресенье, 21 июня 2026<br/>
+          ⌚ Время: 17:30<br/>
+          📍 Адрес: ул. Нис 15 (Пром. Зона), Сдерот
+        </div>
+        <div style="margin-top:8px">
+          ☎ Телефон (Вс–Чт, 9:00–15:00): 077-4220270<br/>
+          📱 WhatsApp (только текстовые сообщения): 054-6389003<br/>
+          📧 Email: info@clm-israel.org
+        </div>
+      </div>
+    </div>
+
+    <!-- Eligibility -->
+    <div class="section-card">
+      <div class="section-title">
+        עולה עד 5 שנים <span class="fr">*</span><br/>
+        <span style="font-weight:400;color:var(--muted);font-size:12px;text-transform:none;letter-spacing:0">אנא בחר/י את הקריטריון המתאים &nbsp;·&nbsp; Пожалуйста выберите подходящий критерий</span>
+      </div>
+      <div class="rgroup">
+        <label class="rcard"><input type="radio" name="elig" value="upto5" onchange="onEligChange()"/><span>עולה חדש עד 5 שנים בארץ<span class="ru">Новый репатриант до 5 лет в стране</span></span></label>
+        <label class="rcard"><input type="radio" name="elig" value="over5" onchange="onEligChange()"/><span>עולה חדש מעל 5 שנים בארץ<span class="ru">Новый репатриант более 5 лет в стране</span></span></label>
+      </div>
+    </div>
+
+    <!-- Disqualification message (shown if "over5" selected) -->
+    <div class="disq" id="disq-box">
+      <h3>לא ניתן להירשם לפרויקט זה</h3>
+      <p>אם אתם עולים חדשים מעל חמש שנים בארץ, לצערנו לא נוכל לסייע לכם במסגרת פרויקט זה. עם זאת, אתם מוזמנים לפנות אלינו, ואם תהיה לנו אפשרות להעניק לכם סיוע, נשקול את בקשתכם.</p>
+      <p>☎ טלפון: 077-4220270 (רק מיום ראשון עד שלישי, 11:00–15:00)<br/>📱 WhatsApp: 054-6389003 (רק הודעות טקסט)<br/>📧 אימייל: info@clm-israel.org</p>
+      <div class="ru">
+        <p style="text-align:center">Если вы новый репатриант и живёте в стране более пяти лет, к сожалению, мы не сможем помочь вам в рамках этого проекта. Но вы можете обратиться к нам, и если у нас будет возможность оказать помощь, мы рассмотрим вашу просьбу.</p>
+        <p style="text-align:center">☎ Телефон (Вс–Вт, 11:00–15:00): 077-4220270<br/>📱 WhatsApp (только текстовые сообщения): 054-6389003<br/>📧 Email: info@clm-israel.org</p>
+      </div>
+    </div>
+    </div><!-- /PAGE 1 -->
+
+    <!-- PAGE 2 -->
+    <div class="fpage" data-page="2" style="display:none">
+      <!-- Personal details -->
+      <div class="section-card">
+        <div class="section-title">פרטים אישיים &nbsp;·&nbsp; Личные данные</div>
+        <div class="fg"><label class="fl">תעודת זהות / דרכון <span class="fr">*</span></label><input class="fi" id="doc" type="text" placeholder="9 ספרות / 2 אותיות+7 ספרות" dir="ltr" style="text-align:left" autocomplete="off" oninput="checkDocExists(this.value)"/></div>
+
+        <!-- Already received THIS MONTH -->
+        <div class="month-already" id="month-already-banner">
+          <div style="font-weight:700;margin-bottom:6px">⚠️ כבר קיבלת סל מזון החודש / Вы уже получили продуктовый набор в этом месяце</div>
+          <div id="month-already-name" style="margin-bottom:4px"></div>
+          <div style="font-size:12px;opacity:.85">לא ניתן להירשם פעמיים באותו חודש. אם זו טעות, פנה אלינו.<br/>Нельзя зарегистрироваться два раза в одном месяце. Если это ошибка, обратитесь к нам.</div>
+        </div>
+
+        <!-- Found in system — confirm details -->
+        <div class="id-confirm" id="id-confirm">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:16px">✓</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--teal)" id="confirm-name"></div>
+              <div style="font-size:11px;color:var(--muted)">נמצא במערכת — אנא אשר את פרטיך / Найден в системе — подтвердите данные</div>
+            </div>
+          </div>
+          <div class="id-confirm-grid" id="confirm-grid"></div>
+          <div class="id-confirm-btns">
+            <button type="button" class="btn-confirm-ok" onclick="confirmPersonOk()">✓ נכון — המשך / Верно — продолжить</button>
+            <button type="button" class="btn-confirm-edit" onclick="confirmPersonEdit()">✏️ עדכן פרטים / Изменить данные</button>
+          </div>
+        </div>
+
+        <!-- New / editable fields -->
+        <div id="personal-fields-wrap">
+        <div class="frow">
+          <div class="fg"><label class="fl">שם <span class="fr">*</span></label><input class="fi" id="fn" type="text" placeholder="שם" autocomplete="given-name"/></div>
+          <div class="fg"><label class="fl">משפחה <span class="fr">*</span></label><input class="fi" id="ln" type="text" placeholder="משפחה" autocomplete="family-name"/></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">טלפון <span class="fr">*</span></label><input class="fi" id="tel" type="tel" placeholder="+972..." autocomplete="tel"/></div>
+          <div class="fg"><label class="fl">ישוב <span class="fr">*</span></label><input class="fi" id="city" type="text" placeholder="התחל להקליד שם ישוב..." autocomplete="off"/></div>
+        </div>
+        <div class="fg"><label class="fl">רחוב <span class="fr">*</span></label><input class="fi" id="street" type="text" placeholder="שם הרחוב" autocomplete="off" dir="rtl"/></div>
+        <div class="frow">
+          <div class="fg"><label class="fl">בית <span class="fr">*</span></label><input class="fi" id="house" type="text" placeholder="מס׳ בית" autocomplete="off" dir="rtl" style="max-width:120px" inputmode="text"/></div>
+          <div class="fg"><label class="fl">דירה <span class="fr">*</span></label><input class="fi" id="apt" type="text" placeholder="מס׳ דירה / אות" autocomplete="off" dir="rtl" style="max-width:120px" inputmode="text"/></div>
+        </div>
+        </div>
+      </div>
+    </div><!-- /PAGE 2 -->
+
+    <!-- PAGE 3 -->
+    <div class="fpage" data-page="3" style="display:none">
+      <!-- Family status -->
+      <div class="section-card">
+        <div class="section-title">מצב משפחתי <span class="fr">*</span><br/><span style="font-weight:400;color:var(--muted);font-size:12px;text-transform:none;letter-spacing:0">Семейное положение — אנא בחרו את האפשרות המתאימה</span></div>
+        <div class="rgroup">
+          <label class="rcard"><input type="radio" name="fstatus" value="couple-minors"/><span>זוג עם ילדים עד גיל 18<span class="ru">Пара с детьми до 18 лет</span></span></label>
+          <label class="rcard"><input type="radio" name="fstatus" value="parent-minors"/><span>אחד הורי עם ילדים עד גיל 18<span class="ru">Родитель одиночка с детьми до 18 лет</span></span></label>
+          <label class="rcard"><input type="radio" name="fstatus" value="couple"/><span>זוג בלי ילדים<span class="ru">Пара без детей</span></span></label>
+          <label class="rcard"><input type="radio" name="fstatus" value="single-person"/><span>אדם בודד<span class="ru">Одиночка</span></span></label>
+          <label class="rcard"><input type="radio" name="fstatus" value="elderly-couple"/><span>זוג גילאים<span class="ru">Пожилая пара</span></span></label>
+          <label class="rcard"><input type="radio" name="fstatus" value="pensioner"/><span>גימלאי בודד<span class="ru">Одинокий пожилой человек</span></span></label>
+        </div>
+      </div>
+
+      <!-- Children -->
+      <div class="section-card">
+        <div class="section-title">כמות ילדים <span class="fr">*</span><br/><span style="font-weight:400;color:var(--muted);font-size:12px;text-transform:none;letter-spacing:0">אנא ציינו את מספר ילדיכם &nbsp;·&nbsp; Укажите количество ваших детей</span></div>
+        <div class="cscale" id="children-scale">
+          <div class="cbtn" data-v="0">0</div>
+          <div class="cbtn" data-v="1">1</div>
+          <div class="cbtn" data-v="2">2</div>
+          <div class="cbtn" data-v="3">3</div>
+          <div class="cbtn" data-v="4">4</div>
+          <div class="cbtn" data-v="5">5</div>
+          <div class="cbtn" data-v="6">6</div>
+          <div class="cbtn" data-v="7">7</div>
+          <div class="cbtn" data-v="8">8</div>
+          <div class="cbtn" data-v="9">9</div>
+          <div class="cbtn" data-v="10">10+</div>
+        </div>
+      </div>
+    </div><!-- /PAGE 3 -->
+
+    <!-- PAGE 4 -->
+    <div class="fpage" data-page="4" style="display:none">
+      <!-- Consent -->
+      <div class="section-card">
+        <div class="section-title">הסכמת המקבל <span class="fr">*</span></div>
+        <div class="consent-box">
+          <div>בקבלת סל מזון, אתם נותנים את הסכמתכם ל:</div>
+          <h4>צילום תמונות וסרטונים:</h4>
+          <div>במהלך חלוקת הערכות ייתכן שיתבצע צילום תמונות וסרטונים למסירות דיווח והסברה על הפעילות. נוכחותכם באזור הצילום מהווה הסכמה לשימוש אפשרי בתמונתכם בחומרים ציבוריים (ללא פרטים מזהים).</div>
+          <h4>עיבוד נתונים אישיים:</h4>
+          <div>אתם מסכימים שהנתונים האישיים שמסרתם (שם, מספר תעודת זהות, פרטי קשר) ישמשו אך ורק למעקב וארגון תהליך חלוקת הסיוע.</div>
+          <h4>סודיות:</h4>
+          <div>כל הנתונים שנאספו לא יועברו לצדדים שלישיים, אלא במקרים בהם הדבר נדרש לצורכי ביקורת מס או דיווח רשמית הקשורה לדיווח הארגון.</div>
+          <div class="ru" style="margin-top:10px;padding-top:10px;border-top:1px dashed #E8D2A8">
+            <div><b>Согласие Получателя</b></div>
+            <div>Получая продуктовый набор вы даёте согласие на:</div>
+            <h4 style="color:inherit">Фотосъёмку и видеосъёмку:</h4>
+            <div>Во время выдачи наборов могут проводиться фото- и видеосъёмка с целью отчётности и информирования о гуманитарной инициативе. Ваше присутствие в зоне съёмки означает согласие на возможное использование вашего изображения в публичных материалах (без указания персональных данных).</div>
+            <h4 style="color:inherit">Обработка персональных данных:</h4>
+            <div>Вы разрешаете использовать указанные вами персональные данные (имя, номер удостоверения личности, контактная информация) исключительно для учёта и организации процесса выдачи помощи.</div>
+            <h4 style="color:inherit">Конфиденциальность:</h4>
+            <div>Все собранные данные не будут переданы третьим лицам, кроме случаев, когда это требуется в рамках официальной налоговой или юридической проверки, связанной с отчётностью организации.</div>
+          </div>
+          <label class="consent-check">
+            <input type="checkbox" id="consent-check"/>
+            <span>כן, הנני מסכים / Да, я согласен/согласна</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Terms / Notice -->
+      <div class="section-card">
+        <div class="section-title">תקנון מתן/קבלת סיוע &nbsp;·&nbsp; Положение о выдаче</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--muted)">
+          <div>🎁 הסיוע (סלי מזון) שניתן לעיל ניתנת כתרומה התנדבותית, ללא תמורה. קבלת הסיוע אינה כרוכה בשום התחייבות, אינה דורשת פעולה בתמורה ואינה מלווה בלחץ, כפייה או השפעה דתית. אדם המקבל את הסיוע מקבל מרצונו החופשי ובהבנה מלאה של אופיו ההתנדבותי.</div>
+          <div class="ru" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+            <b>Положение о безвозмездной выдаче</b><br/>
+            🎁 Помощь (продуктовые наборы) предоставляется в качестве добровольного пожертвования, на безвозмездной основе. Его получение не связано с какими-либо обязательствами, не требует встречных действий и не сопровождается давлением, принуждением или религиозным влиянием. Каждый человек принимает помощь по собственной воле и с полным пониманием её добровольного характера.
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+            <b>⚠️ שימו לב!</b>
+            <ul style="margin-top:6px">
+              <li>החלוקה מתבצעת על סמך רישום אחד למשפחה (זוג או אדם בודד).</li>
+              <li>אנשים המתגוררים בכתובות שונות חייבים להירשם בנפרד.</li>
+              <li>לא ניתן לקבל את הסיוע עבור אדם אחר אם הוא מקבל בעצמו.</li>
+              <li>אם אינכם יכולים להגיע, ניתן לשלוח נציג מטעמכם עם תעודת זהות וספח.</li>
+              <li>הקבלה תתבצע רק עם הצגת תעודת זהות וספח.</li>
+              <li>במקרה שלא תגיעו ולא תשלחו נציג, הרישום יתבטל.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!-- /PAGE 4 -->
+
+    <!-- Navigation -->
+    <div class="fnav" id="fnav">
+      <button class="btn btn-back" id="back-btn" onclick="prevPage()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 3 12 9 6"/></svg>
+        <span>חזרה &nbsp;·&nbsp; Назад</span>
+      </button>
+      <button class="btn" id="next-btn" onclick="nextPage()">
+        <span>הבא &nbsp;·&nbsp; Далее</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 21 12 15 6"/></svg>
+      </button>
+      <button class="btn" id="submit-btn" onclick="submitForm()" style="display:none">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>הרשמה &nbsp;·&nbsp; Регистрация</span>
+      </button>
+    </div>
+    <p class="note">הנתונים שלך נשמרים באופן מאובטח ומשמשים רק לארגון חלוקת הסיוע.<br/>Ваши данные сохраняются в безопасности и используются только для организации выдачи помощи.</p>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="success">
+    <div class="ok-wrap"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>ההרשמה הושלמה! &nbsp;·&nbsp; Регистрация завершена!</h2>
+    <p id="ok-name" style="font-weight:600;color:var(--text);margin-bottom:8px"></p>
+    <div style="font-size:13px;color:var(--muted);line-height:1.7">
+      נתונים נשמרו במערכת. ביום החלוקה, הציגו תעודת זהות וספח.<br/>
+      <span style="display:block;margin-top:6px">Ваши данные сохранены. В день выдачи предъявите Теудат Зеут и Сефах.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL='https://ynpacufijpcumloodjir.supabase.co';
+const SUPABASE_KEY='sb_publishable_EyDKwtYUHdAWhSauesA90A_SO-Xv-FT';
+const COLORS=['#1D9E75','#185FA5','#BA7517','#534AB7','#D4537E'];
+
+async function sb(path,opts={}){
+  const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})},
+    ...opts
+  });
+  const t=await r.text();
+  if(!r.ok)throw new Error(t);
+  return t?JSON.parse(t):[];
+}
+
+function showToast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type;t.style.display='block';
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>{t.style.display='none';t.style.opacity='1';},300);},2800);
+}
+function loading(on){document.getElementById('loader').style.display=on?'block':'none';}
+
+// ── PAGE NAVIGATION ──────────────────────────────────────────────────────
+const TOTAL_PAGES = 4;
+let currentPage = 1;
+
+function updateProgress(){
+  document.getElementById('progress-fill').style.width = (currentPage/TOTAL_PAGES*100)+'%';
+  document.getElementById('progress-text').textContent =
+    'עמוד '+currentPage+' מתוך '+TOTAL_PAGES+' \u00B7 Страница '+currentPage+' из '+TOTAL_PAGES;
+}
+
+function showPage(n){
+  document.querySelectorAll('.fpage').forEach(p=>{
+    p.style.display = (parseInt(p.dataset.page)===n) ? 'block' : 'none';
+  });
+  document.getElementById('back-btn').style.display = n>1 ? 'flex' : 'none';
+  document.getElementById('next-btn').style.display = n<TOTAL_PAGES ? 'flex' : 'none';
+  document.getElementById('submit-btn').style.display = n===TOTAL_PAGES ? 'flex' : 'none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+// ============================================================
+// AidBase Field Validation Module v2
+// Rules: Hebrew-only names, ID/passport, phone, address, city
+// All rules are configurable and can be disabled per field.
+// ============================================================
+const CITIES_IL = [
+"אבו גוש","אבו סנאן","אבירים","אבן יהודה","אבן שמואל","אביחיל","אביטל","אביעזר","אבנת","אבשלום",
+"אדמית","אודים","אודם","אוהד","אור יהודה","אור עקיבא","אורה","אורות","אורטל","אורים","אזור",
+"אחווה","אחוזם","אחיהוד","אחיסמך","אחיעזר","אכסאל","אל-בטוף","אל-עריאן","אלוני הבשן","אלוני יצחק",
+"אלוניים","אלי-עד","אליכין","אליפז","אלישיב","אלישמע","אלמגור","אלמוג","אלעד","אלעזר","אלפי מנשה",
+"אלקוש","אלקנה","אמונים","אמציה","אמירים","ארבל","ארז","אריאל","ארסוף","אשבול","אשדוד","אשדות יעקב",
+"אשכול","אשקלון","אתר","באקה אל-גרביה","באר יעקב","באר שבע","באר טוביה","בארות יצחק","בארותיים",
+"בגין","בוסתן הגליל","בועיינה-נוג'ידאת","בחן","בטחה","בית אל","בית אלפא","בית אריה","בית גוברין",
+"בית דגן","בית הגדי","בית הלוי","בית הנסיה","בית השיטה","בית זרע","בית חגי","בית חירות","בית חנן",
+"בית חנניה","בית יוסף","בית יצחק","בית ינאי","בית לחם הגלילית","בית נחמיה","בית נקופה","בית עוזיאל",
+"בית עזרא","בית עריף","בית קמה","בית רימון","בית שאן","בית שמש","בית שערים","בני ברק","בני דרור",
+"בני דרום","בני עי'ש","בני ציון","בני ראם","בניה","בנימינה","בסמת טבעון","בצת","בקוע","בקעות",
+"בר גיורא","בר יוחאי","ברוש","ברכיה","ברעם","ברקאי","ברקן","ברקת","בת הדר","בת חן","בת ים",
+"בת שלמה","בת-ים","גאולי תימן","גאולים","גב ים","גבולות","גבים","גבע","גבע בנימין","גבע כרמל",
+"גבעות בר","גבעת אבני","גבעת אלה","גבעת ברנר","גבעת זאב","גבעת יערים","גבעת כ\"ח","גבעת ניל\"י",
+"גבעת עוז","גבעת שמואל","גבעת שמש","גבעתי","גבעתיים","גברעם","גדות","גדיש","גדעונה","גדרה",
+"גולן","גומא","גונן","גורן","גורנות הגליל","גזר","גיאה","גיבתון","גילון","גילת","גינוסר","גינתון",
+"גיתה","גיתית","גלאון","גמזו","גן הדרום","גן השומרון","גן יאשיה","גן יבנה","גן נר","גן שורק",
+"גן שלמה","גן שמואל","גניגר","גנת","גנות","גנות הדר","גפן","גרופית","גשר","גשר הזיו","גשרון",
+"גת","גת רימון","דבורה","דביר","דברת","דגניה א","דגניה ב","דולב","דור","דורות","דייר אל-אסד",
+"דייר חנא","דימונה","דישון","דלייה","דלתון","דמיידה","דפנה","דקל","דרום השרון",
+"האון","הבונים","הגושרים","הוד השרון","הושעיה","הזורע","הזורעים","החותרים","היוגב","הכפר הירוק",
+"הלל","המעפיל","הסוללים","הסתדרות","הפורים","הר אדר","הר גילה","הר עמשא","הראל","הרצליה",
+"השומרון","התקווה",
+"ואדי סלאמה","ורד יריחו","זבדיאל","זוהר","זיקים","זיתן","זכרון יעקב","זמר","זנוח","זרחיה",
+"ח'ואלד","חבצלת השרון","חברון","חגור","חגי","חגלה","חד-נס","חדיד","חדרה","חוות עדן","חוות שדה",
+"חולדה","חולון","חולית","חוקוק","חורה","חורפיש","חזון","חיבת ציון","חיפה","חירות","חלוץ","חמד",
+"חמדיה","חמדת","חמרה","חנתון","חספין","חפץ חיים","חצב","חצבה","חצור הגלילית","חצור-אשדוד",
+"חריש","חרמש","חרות","טבריה","טבעון","טייבה","טירה","טירת יהודה","טירת כרמל","טירת צבי",
+"טל מנשה","טל שחר","טללים","טמרה","טנא","טפחות",
+"יבנאל","יבנה","יגור","יד בנימין","יד חנה","יד מרדכי","יד נתן","יד רמבם","יהוד","יהוד מונוסון",
+"יובל","יוטבתה","יונתן","יחיעם","יכיני","ינוח-ג'ת","יסוד המעלה","יסודות","יסעור","יעד","יעל",
+"יפיע","יפית","יפרח","יצהר","יקום","יקיר","יקנעם","יראון","ירדנה","ירוחם","ירושלים","ירחיב",
+"ישע","ישעי","ישרש",
+"כאבול","כאוכב אבו אל הيجא","כברי","כדורי","כוכב יאיר","כוכב מיכאל","כוכב הצפון",
+"כחל","כיסופים","כינרת","כישור","כמהין","כנות","כנף","כסיפה","כסרא-סמיע","כפר אדומים",
+"כפר אוריה","כפר ביאליק","כפר ברא","כפר גדעון","כפר גלים","כפר דניאל","כפר האורנים","כפר הורש",
+"כפר הים","כפר הנגיד","כפר הנשיא","כפר הס","כפר הרא\"ה","כפר ויתקין","כפר זיתים","כפר חב\"ד",
+"כפר חיטים","כפר חנניה","כפר חסידים","כפר יהושע","כפר יונה","כפר יחזקאל","כפר כמא","כפר כנא",
+"כפר מונש","כפר מימון","כפר מנדא","כפר מסריק","כפר מצר","כפר נטר","כפר סאלד","כפר סבא",
+"כפר עבודה","כפר עזה","כפר עציון","כפר קיש","כפר קרע","כפר ראש הנקרה","כפר רופין","כפר רות",
+"כפר שמאי","כפר שמריהו","כפר תבור","כפר תפוח","כרכום","כרם בן זמרה","כרם יבנה","כרם שלום",
+"כרמאל","כרמי יוסף","כרמיאל","כרמים","כרמית","כרמיה","כרמל",
+"לביא","לבנים","לוד","לוזית","לוטם","לוטן","לחי","לימן","לכיש",
+"מאור","מאיר שפיה","מבוא ביתר","מבוא דותן","מבוא חורון","מבוא מודיעים","מבואות ים","מבועים",
+"מבטחים","מגאר","מגד הרוש","מגדל","מגדל העמק","מגדל עוז","מגדלים","מגידו","מגל","מגן",
+"מגן שאול","מגשימים","מדרך עוז","מדרשת בן גוריון","מודיעין","מודיעין מכבים רעות","מולדת",
+"מורן","מורשת","מזור","מזכרת בתיה","מזרעה","מחולה","מחנה טלי","מחנה יהודית","מחנה יוסף",
+"מחנה יתיר","מחניים","מחסיה","מטה אשר","מטה בנימין","מטה יהודה","מיטב","מיסמר","מיצד",
+"מירב","מירון","מישב","מישמר איילון","מישמר דוד","מישמר הירדן","מישמר הנגב","מישמר העמק",
+"מישמר השבעה","מישמר השרון","מיתר","מכמורת","מכמש","מלאה","מנוחה","מנות","מנחמיה","מנרה",
+"מנשית זבדה","מסד","מסדה","מסילות","מסילת ציון","מסלול","מסעדה","מסעדין","מעגלים","מעוז חיים",
+"מעין ברוך","מעין צבי","מעלה אדומים","מעלה אפרים","מעלה גלבוע","מעלה גמלא","מעלה החמישה",
+"מעלה לבונה","מעלה מכמש","מעלה עירון","מעלה עמוס","מעלה שומרון","מעלות תרשיחא","מעמר",
+"מענית","מפלסים","מצובה","מצוקי דרגות","מצליח","מצפה","מצפה אבי\"ב","מצפה אילן","מצפה יריחו",
+"מצפה נטופה","מצפה רמון","מצפה שלם","מקווה ישראל","מרגליות","מרום גולן","מרחביה","מרכז שפירא",
+"משאבי שדה","משגב","משגב עם","משהד","משואות יצחק","משכיות","משמר הירדן","משמר השרון",
+"משמרת","משען","מתת","מתתיהו",
+"נאות גולן","נאות הכיכר","נאות מרדכי","נאות סמדר","נבטים","נגבה","נהלל","נהריה","נועם",
+"נוף הגליל","נופים","נופית","נוקדים","נורדיה","נורית","נחל עוז","נחליאל","נחם","נחשולים",
+"נחשון","נחשונים","ניין","ניל\"י","ניצן","ניצן ב","ניצנה","ניצני עוז","ניצנים","ניר אליהו",
+"ניר בנים","ניר גלים","ניר דוד","ניר חן","ניר ישראל","ניר יצחק","ניר עם","ניר עקיבא","ניר צבי",
+"נס הרים","נס ציונה","נתיב הגדוד","נתיב הל\"ה","נתיב השיירה","נתיבות","נתניה",
+"סאג'ור","סביון","סגולה","סדה","סדות מיכה","סולם","סומסום","סח'נין","סינדיאנה","סלמה","סנסנה",
+"סעד","סעוה","ספיר","סתריה",
+"עברון","עגור","עדי","עדנים","עובדיה","עוזה","עוזייר","עולש","עומר","עופר","עופרה","עוצם",
+"עוקבי בנו","עזוז","עזר","עזריאל","עזריה","עזריקם","עטרות","עיינות","עיר כרמים","עכו","עלומות",
+"עלי","עלי זהב","עלמה","עלמון","עמוקה","עמיחי","עמינדב","עמיעד","עמיעוז","עמיקם","עמיר",
+"עמנואל","עמקה","ענב","עספיא","עפולה","עצמון שגב","עקבת ג'בר","ערב","ערד","עררה","עש",
+"פארן","פדואל","פדיה","פדיות","פוריה","פוריה עילית","פוריה נווה עובד","פטיש","פלך","פלמחים",
+"פנינה","פסגות","פסות","פציר","פקיעין","פקיעין חדשה","פרדס חנה","פרדסיה","פרוד","פרזון","פרי גן",
+"פתח תקווה","צאלים","צביה","צבעון","צובה","צוחר","צוקי ים","צוקים","צור הדסה","צור יצחק",
+"צור משה","צור נתן","צורן","צחר","צלפון","צפריה","צפרירים","צפת","צרופה",
+"קבוצת יבנה","קדומים","קדימה","קדמה","קדמת צבי","קדרון","קדרים","קומי אורה","קוקב","קטורה",
+"קיבוץ גלויות","קיסריה","קלחים","קליה","קלנסווה","קנות","קציר","קצר אל-סר","קצרין",
+"קרוב","קריית אונו","קריית אתא","קריית ביאליק","קריית גת","קריית טבעון","קריית ים","קריית מוצקין",
+"קריית מלאכי","קריית נטפים","קריית עקרון","קריית שלמה","קריית שמונה","קריית תירוש",
+"ראמה","ראש העין","ראש הנקרה","ראש פינה","ראש צורים","ראשון לציון","רבבה","רביד","רגבה",
+"רהט","רובע ו","ריחאניה","ריינה","ריחן","רכסים","רם-און","רמות","רמות השבים","רמות מאיר","רמות נפתלי",
+"רמות פולין","רמות ענבים","רמלה","רמת גן","רמת דוד","רמת הכובש","רמת הנדיב","רמת השרון",
+"רמת יוחנן","רמת ישי","רמת מגשימים","רמת צבי","רמת רחל","רמת רזיאל","רמת שלמה","רמת שפר",
+"רנן","רעים","רעננה","רקפת","רתמים",
+"שאר ישוב","שבי ציון","שבי שומרון","שגב-שלום","שדה אילן","שדה בוקר","שדה דוד","שדה ורבורג",
+"שדה יואב","שדה יעקב","שדה יצחק","שדה מיכה","שדה נחום","שדה נחמיה","שדה עוזיהו","שדה צבי",
+"שדות ים","שדות מיכה","שדמה","שדמות דבורה","שדרות","שוהם","שומרה","שומריה","שוקדה","שורש",
+"שזור","שחר","שחרות","שיבולים","שייח' דנון","שיטים","שילה","שיפר","שכניה","שלווה","שלומי",
+"שלומית","שלפים","שמיר","שמרת","שמשית","שניר","שסגב","שעב","שעל","שעלבים","שעפאט","שפיים",
+"שפיר","שפר","שפרעם","שקד","שקף","שרות","שריד","שרשרת",
+"תדהר","תובל","תומר","תחנת בית יהושע","תימורים","תירוש","תל אביב","תל מונד","תל עדשים",
+"תל שבע","תלמי אלעזר","תלמי ביל\"ו","תלמי יוסף","תלמי יחיאל","תלמים","תמרת","תנובות",
+"תעוז","תפרח","תקוע","תקומה","תראבין","תרום",
+"איבים",
+"איילון",
+"איילת השחר"
+];
+
+// Validation config — can be overridden per page
+// Load saved validation config from localStorage (editable in admin Settings)
+(function(){
+  try {
+    const saved = localStorage.getItem('aidbase_validation_config');
+    if(saved) { window.VALIDATION_CONFIG = JSON.parse(saved); return; }
+  } catch(e){}
+  window.VALIDATION_CONFIG = window.VALIDATION_CONFIG || {
+  name: {
+    enabled: true,
+    hebrewOnly: true,
+    errorMsg: 'אנא מלא/י בעברית בלבד / Пожалуйста, заполняйте только на иврите'
+  },
+  document: {
+    enabled: true,
+    // mode: 'teudat' (9 digits), 'darkon' (2 capital letters + 7 digits), 'auto' (detect)
+    mode: 'auto',
+    errorMsg: 'מספר תעודת הזהות לא תקין / Номер удостоверения введен некорректно',
+  },
+  phone: {
+    enabled: true,
+    digits: 9,
+    errorMsg: 'טלפון: 9 ספרות בלבד, ללא סמלים / Телефон: только 9 цифр'
+  },
+  address: {
+    enabled: true,
+    // Hebrew letters, numbers, slash, dash, space — apartments included
+    errorMsg: 'אנא כתוב גם שם הרחוב וגם מספר הבית / דירה / Пожалуйста, укажите название улицы и номер дома/квартиры.'
+  },
+  city: {
+    enabled: true,
+    useList: true
+  },
+  street: {
+    enabled: true,
+    hebrewOnly: true,
+    errorMsg: 'רחוב: אותיות עבריות בלבד / Улица: только ивритские буквы'
+  },
+  house: {
+    enabled: true,
+    // digits, or digits+1 Hebrew letter, or 1 Hebrew letter alone
+    errorMsg: 'בית: מספר, מספר+אות אחת, או אות אחת בלבד / Дом: цифра, цифра+буква, или одна буква'
+  },
+  apt: {
+    enabled: true,
+    errorMsg: 'דירה: מספר, מספר+אות אחת, או אות אחת בלבד / Квартира: цифра, цифра+буква, или одна буква'
+  }
+};
+})();
+
+// ── Validation helpers ──────────────────────────────────────
+function valHebrew(val) {
+  // Hebrew letters only (including final forms), spaces allowed
+  return /^[\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E\s\-'\"]+$/.test(val.trim());
+}
+
+function valDocument(val) {
+  const v = val.trim();
+  // Teudat Zehut: exactly 9 digits
+  if (/^\d{9}$/.test(v)) return {ok:true, type:'teudat'};
+  // Foreign passport: 1-2 uppercase Latin letters + 7 digits
+  if (/^[A-Z]{1,2}\d{7}$/.test(v)) return {ok:true, type:'darkon'};
+  return {ok:false};
+}
+
+function valPhone(val) {
+  const v = val.replace(/[\s\-\(\)]/g, '');
+  return /^\d{9,10}$/.test(v);
+}
+
+function valAddress(val) {
+  const v = val.trim();
+  if(!v) return true;
+  // Must contain at least one Hebrew word (street name)
+  const hasHebrew = /[א-ת]/.test(v);
+  // Must contain at least one digit (house/apt number)
+  const hasNumber = /\d/.test(v);
+  // Characters allowed: Hebrew, digits, space, /, -, ', ", comma, dot
+  const charsOk = /^[א-תװ-״יִ-פֿ0-9\s\/\-'",\.]+$/.test(v);
+  return hasHebrew && hasNumber && charsOk;
+}
+
+// ── Live input masking ──────────────────────────────────────
+function maskNameInput(input) {
+  // Block non-Hebrew characters (allow spaces, hyphens, apostrophes)
+  input.addEventListener('input', function() {
+    const c = this.value;
+    // Remove any character that is not Hebrew letter, space, hyphen or apostrophe
+    this.value = c.replace(/[^\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E\s\-'\"]/g, '');
+  });
+  input.addEventListener('keydown', function(e) {
+    // Allow: backspace, delete, arrows, tab, ctrl+a/c/v/x
+    if([8,9,37,38,39,40,46].includes(e.keyCode) || (e.ctrlKey||e.metaKey)) return;
+    const char = e.key;
+    if(char.length === 1 && !(/[א-תװ-״יִ-פֿ]/.test(char)) && !/[\s\-'"]/.test(char)) {
+      e.preventDefault();
+    }
+  });
+}
+
+function maskDocInput(input) {
+  input.setAttribute('dir','ltr');
+  input.style.textAlign = 'left';
+  input.addEventListener('input', function() {
+    // Allow: digits, and up to 2 uppercase Latin letters at start
+    let v = this.value.toUpperCase();
+    // Remove invalid chars
+    v = v.replace(/[^A-Z0-9]/g, '');
+    // Max 2 letters prefix
+    const letters = v.match(/^[A-Z]{0,2}/)[0];
+    const digits = v.slice(letters.length).replace(/[^0-9]/g, '');
+    var maxDigits = letters.length === 0 ? 9 : 7;
+    this.value = letters + digits.slice(0, maxDigits);
+  });
+}
+
+function maskPhoneInput(input) {
+  input.setAttribute('inputmode','numeric');
+  input.addEventListener('input', function() {
+    var digits = this.value.replace(/[^\d]/g, '').slice(0, 10);
+    this.value = digits;
+  });
+}
+
+function maskAddressInput(input) {
+  input.addEventListener('input', function() {
+    this.value = this.value.replace(/[^\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E0-9\s\/\-'",\.]/g, '');
+  });
+}
+
+// ── Show / hide error under a field ────────────────────────
+function showFieldError(input, msg) {
+  clearFieldError(input);
+  input.style.borderColor = '#A32D2D';
+  const err = document.createElement('div');
+  err.className = 'field-error-msg';
+  err.style.cssText = 'color:#A32D2D;font-size:12px;margin-top:4px;line-height:1.4';
+  err.textContent = msg;
+  input.parentNode.appendChild(err);
+}
+function clearFieldError(input) {
+  input.style.borderColor = '';
+  const old = input.parentNode.querySelector('.field-error-msg');
+  if(old) old.remove();
+}
+function clearFieldErrorOnInput(input) {
+  input.addEventListener('input', function() { clearFieldError(this); });
+  input.addEventListener('focus', function() { clearFieldError(this); });
+}
+
+// ── City autocomplete ───────────────────────────────────────
+function initCityAutocomplete(input) {
+  if(!input) return;
+  input.setAttribute('autocomplete','off');
+  input.setAttribute('dir','rtl');
+
+  const wrap = input.parentNode;
+  wrap.style.position = 'relative';
+
+  const dropdown = document.createElement('div');
+  dropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #E4E2DA;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:9999;max-height:220px;overflow-y:auto;display:none;font-size:13px;direction:rtl';
+  wrap.appendChild(dropdown);
+
+  input.addEventListener('input', function() {
+    const q = this.value.trim();
+    dropdown.innerHTML = '';
+    if(q.length < 1) { dropdown.style.display='none'; return; }
+    const matches = CITIES_IL.filter(c => c.startsWith(q) || c.includes(q)).slice(0,20);
+    if(!matches.length) { dropdown.style.display='none'; return; }
+    matches.forEach(city => {
+      const item = document.createElement('div');
+      item.style.cssText = 'padding:9px 14px;cursor:pointer;border-bottom:1px solid #F0EEE8';
+      item.textContent = city;
+      item.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        input.value = city;
+        dropdown.style.display = 'none';
+        clearFieldError(input);
+        input.dispatchEvent(new Event('change'));
+      });
+      item.addEventListener('mouseover', function(){ this.style.background='#E1F5EE'; });
+      item.addEventListener('mouseout', function(){ this.style.background=''; });
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = 'block';
+  });
+
+  input.addEventListener('blur', function() {
+    setTimeout(function(){ dropdown.style.display='none'; }, 200);
+  });
+  input.addEventListener('focus', function() {
+    if(this.value.trim().length >= 1) this.dispatchEvent(new Event('input'));
+  });
+}
+
+// ── Validate a single field ─────────────────────────────────
+function validateFieldVal(input, type) {
+  const val = input.value.trim();
+  const cfg = window.VALIDATION_CONFIG;
+  if(!val) return true; // empty = required check handles separately
+
+  if(type === 'name' && cfg.name.enabled) {
+    if(!valHebrew(val)) {
+      showFieldError(input, cfg.name.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'document' && cfg.document.enabled) {
+    const r = valDocument(val);
+    if(!r.ok) {
+      showFieldError(input, cfg.document.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'phone' && cfg.phone.enabled) {
+    if(!valPhone(val)) {
+      showFieldError(input, cfg.phone.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'address' && cfg.address.enabled) {
+    if(!valAddress(val)) {
+      showFieldError(input, cfg.address.errorMsg);
+      return false;
+    }
+  }
+  return true;
+}
+
+// ── Apply all validations to a form ────────────────────────
+// fieldMap: { name:'#fn', name2:'#ln', doc:'#doc', phone:'#tel', address:'#addr', city:'#city' }
+function initFormValidation(fieldMap) {
+  const get = id => id ? document.querySelector(id) : null;
+
+  const fnEl  = get(fieldMap.name);
+  const lnEl  = get(fieldMap.name2);
+  const docEl = get(fieldMap.doc);
+  const telEl = get(fieldMap.phone);
+  const addrEl= get(fieldMap.address);
+  const cityEl= get(fieldMap.city);
+
+  if(fnEl)  { maskNameInput(fnEl);    clearFieldErrorOnInput(fnEl);  }
+  if(lnEl)  { maskNameInput(lnEl);    clearFieldErrorOnInput(lnEl);  }
+  if(docEl) { maskDocInput(docEl);    clearFieldErrorOnInput(docEl); }
+  if(telEl) { maskPhoneInput(telEl);  clearFieldErrorOnInput(telEl); }
+  if(addrEl){ maskAddressInput(addrEl); clearFieldErrorOnInput(addrEl); }
+  if(cityEl){ initCityAutocomplete(cityEl); clearFieldErrorOnInput(cityEl); }
+
+  // Return a validate function to call before submit
+  return function validateAll() {
+    let ok = true;
+    if(fnEl   && fnEl.value.trim())   ok = validateFieldVal(fnEl,   'name')    && ok;
+    if(lnEl   && lnEl.value.trim())   ok = validateFieldVal(lnEl,   'name')    && ok;
+    if(docEl  && docEl.value.trim())  ok = validateFieldVal(docEl,  'document')&& ok;
+    if(telEl  && telEl.value.trim())  ok = validateFieldVal(telEl,  'phone')   && ok;
+    if(addrEl && addrEl.value.trim()) ok = validateFieldVal(addrEl, 'address') && ok;
+    return ok;
+  };
+}
+
+
+
+// ── Init field validation ─────────────────────────────────────────
+var _rbValidate = null;
+document.addEventListener('DOMContentLoaded', function(){
+  _rbValidate = initFormValidation({
+    name:    '#fn',
+    name2:   '#ln',
+    doc:     '#doc',
+    phone:   '#tel',
+    city:    '#city'
+  });
+  // Street: Hebrew letters only — mask live
+  var streetEl = document.getElementById('street');
+  if(streetEl){
+    streetEl.addEventListener('input', function(){
+      this.value = this.value.replace(/[^א-תװ-״\s\-'"]/g, '');
+    });
+    streetEl.addEventListener('keydown', function(e){
+      if([8,9,37,38,39,40,46].includes(e.keyCode)||(e.ctrlKey||e.metaKey)) return;
+      if(e.key.length===1 && !/[א-תװ-״]/.test(e.key) && !/[\s\-'"]/.test(e.key)) e.preventDefault();
+    });
+  }
+  // House: digits + optional one Hebrew letter
+  function maskHouseField(input){
+    input.addEventListener('input', function(){
+      var v = this.value;
+      // Remove anything that is not a Hebrew letter or digit
+      v = v.replace(/[^א-ת\d]/g, '');
+      // Allow max 1 Hebrew letter total — keep the first one found, remove extras
+      var letters = [];
+      var digits = [];
+      for(var i = 0; i < v.length; i++){
+        var ch = v[i];
+        if(/[א-ת]/.test(ch)){
+          if(letters.length === 0) letters.push(ch); // keep only first letter
+        } else {
+          digits.push(ch);
+        }
+      }
+      // Rebuild: digits can appear before or after the letter
+      // Determine original order: letter before digits or after
+      var firstLetterIdx = -1;
+      var firstDigitIdx  = -1;
+      for(var j = 0; j < this.value.length; j++){
+        if(/[א-ת]/.test(this.value[j]) && firstLetterIdx === -1) firstLetterIdx = j;
+        if(/\d/.test(this.value[j]) && firstDigitIdx === -1) firstDigitIdx = j;
+      }
+      var result;
+      if(letters.length === 0){
+        result = digits.join('').slice(0, 5);
+      } else if(digits.length === 0){
+        result = letters[0]; // only a single Hebrew letter
+      } else if(firstLetterIdx < firstDigitIdx){
+        // letter first (e.g. א15)
+        result = letters[0] + digits.join('').slice(0, 5);
+      } else {
+        // digits first then letter (e.g. 15א)
+        result = digits.join('').slice(0, 5) + letters[0];
+      }
+      this.value = result;
+    });
+  }
+  var houseEl = document.getElementById('house');
+  if(houseEl) maskHouseField(houseEl);
+  var aptEl = document.getElementById('apt');
+  if(aptEl) maskHouseField(aptEl);
+});
+
+function validatePage(n){
+  if(n===1){
+    const elig=document.querySelector('input[name="elig"]:checked')?.value;
+    if(!elig){showToast('אנא בחר/י אפשרות / Пожалуйста выберите вариант','err');return false;}
+    if(elig==='over5'){return false;} // disqualified, no Next
+    return true;
+  }
+  if(n===2){
+    const fn   = document.getElementById('fn').value.trim();
+    const ln   = document.getElementById('ln').value.trim();
+    const doc  = document.getElementById('doc').value.trim();
+    const tel  = document.getElementById('tel').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const street = document.getElementById('street').value.trim();
+    const house  = document.getElementById('house').value.trim();
+    const apt    = document.getElementById('apt').value.trim();
+    if(!fn||!ln||!doc||!tel){showToast('\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0\u05d5\u05ea \u05d0\u05ea \u05db\u05dc \u05d4\u05e9\u05d3\u05d5\u05ea \u05d4\u05de\u05e1\u05d5\u05de\u05e0\u05d9\u05dd \u05d1-* / \u0417\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u0432\u0441\u0435 \u043f\u043e\u043b\u044f, \u043e\u0442\u043c\u0435\u0447\u0435\u043d\u043d\u044b\u0435 *','err');return false;}
+    if(!city){ showToast('\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0\u05d5 \u05d9\u05e9\u05d5\u05d1 / \u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u0430\u0441\u0435\u043b\u0451\u043d\u043d\u044b\u0439 \u043f\u0443\u043d\u043a\u0442','err');return false; }
+    if(!street){ showToast('\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0\u05d5 \u05e9\u05dd \u05e8\u05d7\u05d5\u05d1 / \u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0443\u043b\u0438\u0446\u044b','err');return false; }
+    if(!house){ showToast('\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0\u05d5 \u05de\u05e1\u05e4\u05e8 \u05d1\u05d9\u05ea / \u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u043e\u043c\u0435\u05e8 \u0434\u043e\u043c\u0430','err');return false; }
+    if(!apt){ showToast('\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0\u05d5 \u05de\u05e1\u05e4\u05e8 \u05d3\u05d9\u05e8\u05d4 / \u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u043e\u043c\u0435\u0440 \u043a\u0432\u0430\u0440\u0442\u0438\u0440\u044b','err');return false; }
+    if((window.VALIDATION_CONFIG?.street?.enabled !== false) && !foundPerson && !/^[\u05D0-\u05EA\u05F0-\u05F4\s\-'"]+$/.test(street)){
+      showToast((window.VALIDATION_CONFIG?.street?.errorMsg)||'\u05e8\u05d7\u05d5\u05d1: \u05d0\u05d5\u05ea\u05d9\u05d5\u05ea \u05e2\u05d1\u05e8\u05d9\u05d5\u05ea \u05d1\u05dc\u05d1\u05d3 / \u0423\u043b\u0438\u0446\u0430: \u0442\u043e\u043b\u044c\u043a\u043e \u0438\u0432\u0440\u0438\u0442\u0441\u043a\u0438\u0435 \u0431\u0443\u043a\u0432\u044b','err');return false;
+    }
+    if((window.VALIDATION_CONFIG?.house?.enabled !== false) && !foundPerson && !/^[\u05D0-\u05EA]?\d+[\u05D0-\u05EA]?$|^[\u05D0-\u05EA]$/.test(house)){
+      showToast((window.VALIDATION_CONFIG?.house?.errorMsg)||'\u05d1\u05d9\u05ea: \u05de\u05e1\u05e4\u05e8, \u05de\u05e1\u05e4\u05e8+\u05d0\u05d5\u05ea, \u05d0\u05d5 \u05d0\u05d5\u05ea \u05d0\u05d7\u05ea / \u0414\u043e\u043c: \u0446\u0438\u0444\u0440\u0430, \u0446\u0438\u0444\u0440\u0430+\u0431\u0443\u043a\u0432\u0430 \u0438\u043b\u0438 \u043e\u0434\u043d\u0430 \u0431\u0443\u043a\u0432\u0430','err');return false;
+    }
+    if((window.VALIDATION_CONFIG?.apt?.enabled !== false) && !foundPerson && !/^[\u05D0-\u05EA]?\d+[\u05D0-\u05EA]?$|^[\u05D0-\u05EA]$/.test(apt)){
+      showToast((window.VALIDATION_CONFIG?.apt?.errorMsg)||'\u05d3\u05d9\u05e8\u05d4: \u05de\u05e1\u05e4\u05e8, \u05de\u05e1\u05e4\u05e8+\u05d0\u05d5\u05ea, \u05d0\u05d5 \u05d0\u05d5\u05ea \u05d0\u05d7\u05ea / \u041a\u0432\u0430\u0440\u0442\u0438\u0440\u0430: \u0446\u0438\u0444\u0440\u0430, \u0446\u0438\u0444\u0440\u0430+\u0431\u0443\u043a\u0432\u0430 \u0438\u043b\u0438 \u043e\u0434\u043d\u0430 \u0431\u0443\u043a\u0432\u0430','err');return false;
+    }
+    if(blockedThisMonth){
+      showToast('\u05db\u05d1\u05e8 \u05e7\u05d1\u05dc\u05ea \u05d4\u05d7\u05d5\u05d3\u05e9 / \u0412\u044b \u0443\u0436\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0438 \u0432 \u044d\u0442\u043e\u043c \u043c\u0435\u0441\u044f\u0446\u0435','err');return false;
+    }
+    if(_rbValidate && !_rbValidate()) return false;
+    return true;
+  }
+  if(n===3){
+    const fstatus=document.querySelector('input[name="fstatus"]:checked')?.value;
+    if(!fstatus){showToast('אנא בחרו מצב משפחתי / Выберите семейное положение','err');return false;}
+    if(selectedChildren===null){showToast('אנא ציינו את מספר הילדים / Укажите количество детей','err');return false;}
+    return true;
+  }
+  return true;
+}
+
+function nextPage(){
+  if(!validatePage(currentPage))return;
+  if(currentPage<TOTAL_PAGES){currentPage++;showPage(currentPage);}
+}
+function prevPage(){
+  if(currentPage>1){currentPage--;showPage(currentPage);}
+}
+
+// Eligibility logic
+function onEligChange(){
+  const val=document.querySelector('input[name="elig"]:checked')?.value;
+  const disq=document.getElementById('disq-box');
+  const fnav=document.getElementById('fnav');
+  if(val==='over5'){
+    disq.classList.add('show');
+    fnav.style.display='none';
+    document.querySelector('.note').style.display='none';
+  } else if(val==='upto5'){
+    disq.classList.remove('show');
+    fnav.style.display='flex';
+    document.querySelector('.note').style.display='block';
+  }
+  // Update card highlight
+  document.querySelectorAll('input[name="elig"]').forEach(r=>{
+    r.closest('.rcard').classList.toggle('checked', r.checked);
+  });
+}
+
+// Family status card highlight
+document.querySelectorAll('input[name="fstatus"]').forEach(r=>{
+  r.addEventListener('change',()=>{
+    document.querySelectorAll('input[name="fstatus"]').forEach(x=>x.closest('.rcard').classList.toggle('checked', x.checked));
+  });
+});
+
+// Children scale
+let selectedChildren=null;
+document.querySelectorAll('#children-scale .cbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#children-scale .cbtn').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    selectedChildren=btn.dataset.v;
+  });
+});
+
+// Doc lookup: find existing person, check if already received THIS MONTH for basket project
+let docCheckTimer=null;
+let foundPerson=null;
+let blockedThisMonth=false;
+
+function currentMonthKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function isSameMonth(dateStr){
+  // signed_at is stored as a locale date/time string; fall back gracefully if parsing fails
+  const d=new Date(dateStr);
+  if(isNaN(d.getTime()))return false;
+  const now=new Date();
+  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+}
+
+function resetDocState(){
+  foundPerson=null;
+  blockedThisMonth=false;
+  document.getElementById('id-confirm').classList.remove('show');
+  document.getElementById('month-already-banner').classList.remove('show');
+  document.getElementById('personal-fields-wrap').style.display='block';
+  document.getElementById('submit-btn').disabled=false;
+}
+
+async function checkDocExists(val){
+  clearTimeout(docCheckTimer);
+  resetDocState();
+  val=(val||'').trim();
+  if(val.length<4)return;
+  docCheckTimer=setTimeout(()=>lookupDoc(val),600);
+}
+
+async function lookupDoc(doc){
+  loading(true);
+  try{
+    const rows=await sb('people?select=*&document=eq.'+encodeURIComponent(doc));
+    if(!rows.length){
+      // New person — show empty fields, nothing more to check
+      return;
+    }
+    const p=rows[0];
+    foundPerson=p;
+
+    // Check signatures for THIS project to see if already received this month
+    const sigs=await sb('signatures?select=*&person_id=eq.'+p.id+'&project_id=eq.basket');
+    const signedThisMonth=sigs.find(s=>s.status!=='pending' && s.signed_at && isSameMonth(s.signed_at));
+    if(signedThisMonth){
+      blockedThisMonth=true;
+      document.getElementById('month-already-name').textContent=p.first_name+' '+p.last_name+' — '+doc;
+      document.getElementById('month-already-banner').classList.add('show');
+      document.getElementById('personal-fields-wrap').style.display='none';
+      document.getElementById('submit-btn').disabled=true;
+      return;
+    }
+
+    // Not blocked — show confirm card with auto-filled data
+    document.getElementById('confirm-name').textContent=p.first_name+' '+p.last_name;
+    const grid=document.getElementById('confirm-grid');
+    grid.innerHTML=[
+      {l:'שם / Имя',v:p.first_name||'--'},
+      {l:'משפחה / Фамилия',v:p.last_name||'--'},
+      {l:'טלפון / Телефон',v:p.phone||'--'},
+      {l:'ישוב / Город',v:p.city||'--'},
+      {l:'כתובת / Адрес',v:p.address||'--'},
+    ].map(f=>'<div><div class="id-confirm-label">'+f.l+'</div><div style="font-size:13px;font-weight:500">'+f.v+'</div></div>').join('');
+    document.getElementById('id-confirm').classList.add('show');
+    // Pre-fill (hidden) fields in case of edit
+    document.getElementById('fn').value=p.first_name||'';
+    document.getElementById('ln').value=p.last_name||'';
+    document.getElementById('tel').value=p.phone||'';
+    document.getElementById('city').value=p.city||'';
+    document.getElementById('street').value=p.address||'';
+    document.getElementById('personal-fields-wrap').style.display='none';
+  }catch(e){ /* on error, just let them fill the form normally */ }
+  finally{loading(false);}
+}
+
+function confirmPersonOk(){
+  document.getElementById('personal-fields-wrap').style.display='none';
+  showToast('הפרטים אושרו / Данные подтверждены');
+}
+function confirmPersonEdit(){
+  document.getElementById('id-confirm').classList.remove('show');
+  document.getElementById('personal-fields-wrap').style.display='block';
+  document.getElementById('fn').focus();
+}
+
+async function submitForm(){
+  if(blockedThisMonth){showToast('כבר קיבלת החודש / Вы уже получили в этом месяце','err');return;}
+  const consent=document.getElementById('consent-check').checked;
+  if(!consent){showToast('יש לאשר את ההסכמה כדי להמשיך / Необходимо подтвердить согласие','err');return;}
+
+  const doc=document.getElementById('doc').value.trim();
+  const fstatus=document.querySelector('input[name="fstatus"]:checked')?.value;
+
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;loading(true);
+  try{
+    let person=foundPerson;
+    const childrenVal = selectedChildren==='10' ? '5+' : selectedChildren;
+
+    // Defensive re-check: if the debounced lookupDoc() hasn't resolved yet
+    // (e.g. user typed/pasted the document and hit submit quickly), foundPerson
+    // can still be null even though this document already exists in people.
+    // Re-verify right before deciding insert-vs-update to avoid a 409 duplicate
+    // key error on people_document_key.
+    if(!person){
+      try{
+        const existing=await sb('people?select=*&document=eq.'+encodeURIComponent(doc));
+        if(existing && existing.length) person=foundPerson=existing[0];
+      }catch(eCheck){ /* if this check fails, fall through and let the insert attempt run as before */ }
+    }
+
+    if(!person){
+      // New person — create in People
+      const fn=document.getElementById('fn').value.trim();
+      const ln=document.getElementById('ln').value.trim();
+      const tel=document.getElementById('tel').value.trim();
+      const notes = 'הרשמה מקדימה — חלוקת סלי מזון | הסכמה: כן';
+      try{
+        const created=await sb('people',{method:'POST',body:JSON.stringify([{
+          first_name:fn,last_name:ln,document:doc,
+          phone:tel,
+          city:document.getElementById('city').value.trim(),
+          address:(document.getElementById('street').value.trim()+' '+document.getElementById('house').value.trim()+(document.getElementById('apt').value.trim()?' דירה '+document.getElementById('apt').value.trim():'')).trim(),
+          street:document.getElementById('street').value.trim(),
+          house_number:document.getElementById('house').value.trim(),
+          apartment:document.getElementById('apt').value.trim(),
+          family_status:fstatus,children:childrenVal,
+          notes:notes,
+          color:COLORS[Math.floor(Math.random()*COLORS.length)]
+        }])});
+        person=created[0];
+      }catch(eIns){
+        // Extreme edge case: the document was inserted by someone else
+        // (e.g. duplicate submit, two tabs) in the tiny window between our
+        // re-check above and this insert. Recover gracefully instead of
+        // showing a raw duplicate-key error to the family.
+        const msg=(eIns&&eIns.message)||'';
+        if(msg.indexOf('people_document_key')!==-1 || msg.indexOf('23505')!==-1){
+          const retry=await sb('people?select=*&document=eq.'+encodeURIComponent(doc));
+          if(retry && retry.length) person=foundPerson=retry[0];
+          else throw eIns;
+        } else {
+          throw eIns;
+        }
+      }
+    } else {
+      // Returning person — update their family status/children for this registration
+      // (in case it changed). If they chose "Edit details" the address/phone
+      // fields are visible and editable too, so save those as well.
+      try{
+        await sb('people?id=eq.'+person.id,{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({
+          family_status:fstatus,children:childrenVal,
+          phone:document.getElementById('tel').value.trim()||undefined,
+          city:document.getElementById('city').value.trim()||undefined,
+          address:(document.getElementById('street').value.trim()+' '+document.getElementById('house').value.trim()+(document.getElementById('apt').value.trim()?' דירה '+document.getElementById('apt').value.trim():'')).trim()||undefined,
+          street:document.getElementById('street').value.trim()||undefined,
+          house_number:document.getElementById('house').value.trim()||undefined,
+          apartment:document.getElementById('apt').value.trim()||undefined,
+        })});
+      }catch(e2){ /* non-blocking */ }
+    }
+
+    // Link this person to the Food Basket project as a PENDING pre-registration
+    // for THIS month (no signature yet — they sign on the day they receive the aid).
+    try{
+      if(person && person.id){
+        await sb('signatures',{method:'POST',body:JSON.stringify([{
+          person_id:person.id, project_id:'basket', status:'pending',
+          signed_at:new Date().toLocaleString('he-IL'), hash:null, sig_data:null
+        }])});
+      }
+    }catch(e2){ /* non-blocking: registration already succeeded even if this fails */ }
+
+    document.getElementById('ok-name').textContent=(person.first_name||document.getElementById('fn').value.trim())+' '+(person.last_name||document.getElementById('ln').value.trim())+' — ת.ז: '+doc;
+    document.getElementById('form-wrap').style.display='none';
+    document.getElementById('success').classList.add('show');
+  }catch(e){showToast('שגיאה: '+e.message,'err');}
+  finally{btn.disabled=false;loading(false);}
+}
+</script>
+
+<!-- AidBase footer -->
+<div style="text-align:center;padding:28px 20px 20px;border-top:1px solid #E4E2DA;margin-top:20px">
+  <a href="https://aidbase.netlify.app/landing.html" target="_blank" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;opacity:.55;transition:.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.55">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+    <span style="font-size:12px;font-weight:600;color:#1A1917;font-family:'Segoe UI',Arial,sans-serif">Powered by AidBase</span>
+  </a>
+</div>
+
+</body>
+</html>

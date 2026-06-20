@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D9E75'/%3E%3Cpath d='M16 5L6 10l10 5 10-5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M6 20l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 15l10 5 10-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AidBase — Form</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#1D9E75;--tl:#E1F5EE;--td:#085041;--amber:#BA7517;--al:#FAEEDA;--border:#E4E2DA;--muted:#6B6860;--hint:#9E9C96;--text:#1A1917;--bg:#F7F6F2;--surface:#fff;--r:8px;--font:'DM Sans',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+.top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:9px}
+.top-mark{width:28px;height:28px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.top-mark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.top-name{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.org-banner{display:none;width:100%;background:var(--surface);border-bottom:1px solid var(--border);overflow:hidden}
+.org-banner img{width:100%;max-height:100px;object-fit:contain;display:block}
+.wrap{max-width:620px;margin:0 auto;padding:28px 20px 60px;direction:rtl}
+.form-header{margin-bottom:24px;padding-bottom:18px;border-bottom:3px solid var(--teal)}
+.form-header h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.form-header p{font-size:14px;color:var(--muted);line-height:1.6}
+.proj-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:12px}
+.field-wrap{margin-bottom:18px}
+.field-label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;text-align:right}
+.field-req{color:var(--teal)}
+.fi{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:14px;font-family:var(--font);outline:none;transition:.15s}
+.fi.error{border-color:#F09595!important;background:#FCEBEB!important}
+.fi:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.fi.af{border-color:var(--teal);background:var(--tl)}
+textarea.fi{resize:vertical;min-height:80px}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:14px;margin-bottom:6px;transition:.1s}
+.radio-opt:hover,.check-opt:hover{border-color:var(--teal);background:var(--tl)}
+.radio-opt input,.check-opt input{accent-color:var(--teal);width:16px;height:16px;flex-shrink:0}
+.hdg{font-size:17px;font-weight:700;margin:8px 0 4px}
+.hdg-sub{font-size:13px;color:var(--muted);margin-bottom:4px}
+.divider-line{border:none;border-top:2px solid var(--border);margin:8px 0}
+.sig-wrap{border:1.5px dashed var(--border);border-radius:var(--r);background:#fff;overflow:hidden;position:relative;touch-action:none}
+.sig-wrap canvas{display:block;cursor:crosshair;width:100%;height:140px}
+.sig-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;color:#bbb;pointer-events:none;white-space:nowrap}
+.id-banner{display:none;background:var(--tl);border:1px solid var(--teal);border-radius:var(--r);padding:10px 14px;margin-bottom:10px;font-size:13px;color:var(--td);align-items:center;gap:8px}
+.id-banner.show{display:flex}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 24px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;cursor:pointer;font-size:15px;font-family:var(--font);font-weight:600;width:100%;transition:.15s}
+.btn:hover{background:var(--td)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-s{padding:5px 12px;font-size:12px;width:auto;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:var(--font)}
+.note{font-size:11px;color:var(--hint);text-align:center;margin-top:10px}
+.success{display:none;text-align:center;padding:48px 20px}.success.show{display:block}
+.ok-wrap{width:64px;height:64px;background:var(--tl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.ok-wrap svg{width:30px;height:30px;fill:none;stroke:var(--teal);stroke-width:2.5;stroke-linecap:round}
+.success h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.not-found{text-align:center;padding:60px 20px}
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:opacity .3s;box-shadow:0 4px 12px rgba(0,0,0,.12);display:none}
+.tok{background:#E1F5EE;color:#085041;border:1px solid #5DCAA5}
+.ter{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595}
+.loader{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1D9E75,#5DCAA5,#1D9E75);background-size:200%;animation:sh 1.2s infinite;z-index:9999;display:none}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── Bilingual secondary label ── */
+.field-label2{font-size:12px;color:var(--muted);margin-top:-2px;margin-bottom:6px}
+.opt-label2{display:block;font-size:11px;color:var(--hint);margin-top:1px}
+
+/* ── Info block ── */
+.info-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:18px;font-size:13px;line-height:1.8;white-space:pre-wrap}
+.info-block .sec2{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--muted)}
+
+/* ── Scale ── */
+.scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(40px,1fr));gap:6px}
+.scale-btn{display:flex;align-items:center;justify-content:center;padding:10px 0;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:14px;font-weight:600;transition:.15s;background:var(--surface)}
+.scale-btn:hover{border-color:var(--teal)}
+.scale-btn.sel{border-color:var(--teal);background:var(--teal);color:#fff}
+
+/* ── Consent ── */
+.consent-block{background:var(--al);border:1px solid #E8D2A8;border-radius:var(--r);padding:14px 16px;font-size:12px;line-height:1.8;margin-bottom:18px;white-space:pre-wrap}
+.consent-block .sec2{margin-top:10px;padding-top:10px;border-top:1px dashed #E8D2A8;color:var(--muted)}
+.consent-check{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:2px solid var(--teal);border-radius:var(--r);background:var(--tl);cursor:pointer;margin-top:12px}
+.consent-check input{margin-top:2px;accent-color:var(--teal);width:18px;height:18px;flex-shrink:0;cursor:pointer}
+.consent-check span{font-size:13px;font-weight:600}
+
+/* ── Disqualify ── */
+.disq-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;white-space:pre-wrap;font-size:13px;line-height:1.7}
+.disq-block .sec2{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);color:var(--muted)}
+
+/* ── Multi-page navigation ── */
+.progress-wrap{margin-bottom:18px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .25s ease}
+.progress-text{font-size:11px;color:var(--hint);text-align:center}
+.fpage{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fnav{display:flex;gap:10px;margin-top:6px}
+.fnav .btn{width:auto;flex:1}
+.btn-back{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-back:hover{background:var(--bg);border-color:var(--hint)}
+</style>
+</head>
+<body>
+<div id="loader" class="loader"></div>
+<div id="toast" class="toast"></div>
+<div class="top-bar">
+  <div class="top-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+  <span class="top-name">AidBase</span>
+</div>
+<div class="org-banner" id="org-banner"><img id="org-banner-img" src="" alt=""/></div>
+<div class="wrap">
+  <div id="view-notfound" style="display:none" class="not-found">
+    <div style="font-size:40px;margin-bottom:12px">⚠️</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">Form not found</h2>
+    <p style="color:var(--muted)">This form link is invalid or no longer available.</p>
+  </div>
+  <div id="view-form" style="display:none">
+    <div class="form-header">
+      <div id="form-proj-badge" class="proj-badge" style="display:none"></div>
+      <h1 id="form-title">Form</h1>
+      <p id="form-desc" style="display:none"></p>
+    </div>
+    <div id="id-banner" class="id-banner">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="id-banner-text">Person identified — data filled automatically</span>
+    </div>
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text"></div>
+    </div>
+    <div id="form-fields-render"></div>
+    <div style="margin-top:24px">
+      <div class="fnav" id="fnav" style="display:none">
+        <button class="btn btn-back" id="back-btn" onclick="prevPage()" style="display:none">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" transform="rotate(180 12 12)"/></svg>
+          Back
+        </button>
+        <button class="btn" id="next-btn" onclick="nextPage()">
+          Next
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <button class="btn" id="submit-btn" onclick="submitPublicForm()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Submit
+      </button>
+      <p class="note">Your data is stored securely and used only for aid management.</p>
+    </div>
+  </div>
+  <div class="success" id="view-success">
+    <div class="ok-wrap"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2 id="success-title">Submitted!</h2>
+    <p id="success-msg" style="color:var(--muted);font-size:14px">Thank you. Your response has been recorded.</p>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://ynpacufijpcumloodjir.supabase.co';
+const SUPABASE_KEY='sb_publishable_EyDKwtYUHdAWhSauesA90A_SO-Xv-FT';
+const COLORS=['#1D9E75','#185FA5','#BA7517','#534AB7','#D4537E'];
+const SL={'single-parent':'Single parent','pensioner':'Pensioner','parent-minors':'Parent w/ minors','couple':'Couple','young-couple':'Young couple','ukraine-refugee':'Ukrainian refugee'};
+
+
+// Default form shown when no form ID provided — Hebrew fields with default validations
+var DEFAULT_FORM = {
+  id: 'default',
+  name: 'הרשמה',
+  project_id: null,
+  type: 'registration',
+  inherit_validation: true,
+  fields: [
+    {type:'text', label:'שם', required:true, key:'first_name', placeholder:'שם פרטי',
+      validation:{pattern:'^[\u05D0-\u05EA\u05F0-\u05F4 \-]+$', errorMsg:'\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0/\u05d9 \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05d1\u05dc\u05d1\u05d3'}},
+    {type:'text', label:'משפחה', required:true, key:'last_name', placeholder:'שם משפחה',
+      validation:{pattern:'^[\u05D0-\u05EA\u05F0-\u05F4 \-]+$', errorMsg:'\u05d0\u05e0\u05d0 \u05de\u05dc\u05d0/\u05d9 \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05d1\u05dc\u05d1\u05d3'}},
+    {type:'text', label:'תעודת זהות / דרכון', required:true, key:'document', placeholder:'9 ספרות / 2 אות+7 ספרות',
+      validation:{pattern:'^(\d{9}|[A-Z]{1,2}\d{7})$', errorMsg:'מספר תעודת הזהות לא תקין'}},
+    {type:'tel', label:'טלפון', required:true, key:'phone', placeholder:'050-0000000',
+      validation:{pattern:'^\d{9,10}$', errorMsg:'טלפון: 9–10 ספרות בלבד'}},
+    {type:'text', label:'ישוב', required:true, key:'city', placeholder:'התחל להקליד שם ישוב...',
+      _useCityAutocomplete:true},
+    {type:'text', label:'רחוב', required:true, key:'street', placeholder:'שם הרחוב',
+      validation:{pattern:'^[\u05D0-\u05EA\u05F0-\u05F4 \-]+$', errorMsg:'\u05e8\u05d7\u05d5\u05d1: \u05d0\u05d5\u05ea\u05d9\u05d5\u05ea \u05e2\u05d1\u05e8\u05d9\u05d5\u05ea \u05d1\u05dc\u05d1\u05d3',
+      _streetMask:true}},
+    {type:'text', label:'בית', required:true, key:'house', placeholder:'מספר בית',
+      validation:{pattern:'^[א-ת]?\d+[א-ת]?$|^[א-ת]$', errorMsg:'בית: מספר, מספר+אות, או אות אחת בלבד',
+      _houseMask:true}},
+    {type:'text', label:'דירה', required:false, key:'apt', placeholder:'מספר דירה',
+      validation:{pattern:'^[א-ת]?\d+[א-ת]?$|^[א-ת]$', errorMsg:'דירה: מספר, מספר+אות, או אות אחת בלבד',
+      _houseMask:true}},
+    {type:'select', label:'מצב משפחתי', required:false, key:'family_status',
+      options:[
+        {label:'הורה יחידי', value:'single-parent'},
+        {label:'פנסיונר', value:'pensioner'},
+        {label:'הורה עם ילדים תחת 18', value:'parent-minors'},
+        {label:'זוג', value:'couple'},
+        {label:'זוג צעיר', value:'young-couple'},
+        {label:'פליט מאוקראינה', value:'ukraine-refugee'},
+      ]},
+    {type:'select', label:'מספר ילדים', required:false, key:'children',
+      options:[
+        {label:'0 - ללא ילדים', value:'0'},
+        {label:'ילד 1', value:'1'},
+        {label:'2 ילדים', value:'2'},
+        {label:'3 ילדים', value:'3'},
+        {label:'4 ילדים', value:'4'},
+        {label:'5 ילדים או יותר', value:'5+'},
+      ]},
+  ]
+};
+
+let formDef=null, projData=null, sigCtx=null, sigHasData=false, sigDrawing=false;
+let autoFilledPerson=null;
+let docTimer=null;
+
+async function sb(path,opts={}){
+  const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation','Accept':'application/json',...(opts.headers||{})},
+    ...opts
+  });
+  const t=await r.text();
+  if(!r.ok)throw new Error(t);
+  return t?JSON.parse(t):[];
+}
+
+function loading(on){document.getElementById('loader').style.display=on?'block':'none';}
+function showToast(msg,type='tok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type;t.style.display='block';setTimeout(()=>{t.style.opacity='0';setTimeout(()=>{t.style.display='none';t.style.opacity='1';},300);},2800);}
+
+function loadBranding(){
+  const s=localStorage.getItem('aidbase_settings');
+  if(!s)return;
+  try{const d=JSON.parse(s);if(d.logo){document.getElementById('org-banner-img').src=d.logo;document.getElementById('org-banner').style.display='block';}}catch(e){}
+}
+
+async function init(){
+  loadBranding();
+  const params=new URLSearchParams(window.location.search);
+  const formId=params.get('f');
+  if(!formId){
+    // No form ID — show default registration form
+    formDef = Object.assign({}, DEFAULT_FORM);
+    document.title = formDef.name + ' — AidBase';
+    document.getElementById('form-title').textContent = formDef.name;
+    renderFormFields(formDef.fields||[]);
+    document.getElementById('view-form').style.display='block';
+    return;
+  }
+  loading(true);
+  try{
+    const forms=await sb('forms?select=*&id=eq.'+encodeURIComponent(formId));
+    if(!forms.length){
+      // No form found — show default form with Hebrew fields
+      formDef = Object.assign({}, DEFAULT_FORM);
+      if(formId) formDef.id = formId; // keep the ID so submissions go to the right place
+      document.title = formDef.name + ' — AidBase';
+      document.getElementById('form-title').textContent = formDef.name;
+      renderFormFields(formDef.fields||[]);
+      document.getElementById('view-form').style.display='block';
+      return;
+    }
+    formDef=forms[0];
+    document.title=formDef.name+' — AidBase';
+    document.getElementById('form-title').textContent=formDef.name;
+    if(formDef.project_id){
+      const projs=await sb('projects?select=*&id=eq.'+formDef.project_id);
+      if(projs.length){
+        projData=projs[0];
+        const badge=document.getElementById('form-proj-badge');
+        badge.textContent=projData.icon+' '+projData.name;
+        badge.style.background=projData.color+'20';
+        badge.style.color=projData.color;
+        badge.style.display='inline-flex';
+      }
+    }
+    renderFormFields(formDef.fields||[]);
+    document.getElementById('view-form').style.display='block';
+  }catch(e){document.getElementById('view-notfound').style.display='block';}
+  finally{loading(false);}
+}
+
+let pageGroups=[[]], pageTitles=[''], currentPage=0, disqualified=false, scaleValues={};
+
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function buildPages(fields){
+  pageGroups=[[]]; pageTitles=[''];
+  fields.forEach((f,i)=>{
+    if(f.type==='pagebreak'){ pageGroups.push([]); pageTitles.push(f.label||''); return; }
+    pageGroups[pageGroups.length-1].push(i);
+  });
+}
+
+function optLabel(o){const opt=typeof o==='string'?{label:o,value:o}:o;return opt;}
+
+function renderOneField(f,i){
+  if(f.type==='divider') return`<hr class="divider-line"/>`;
+  if(f.type==='heading') return`<div class="hdg">${f.label||''}</div>${f.sublabel?`<div class="hdg-sub">${f.sublabel}</div>`:''}`;
+  if(f.type==='info') return`<div class="info-block">${esc(f.content)}${f.content2?`<div class="sec2">${esc(f.content2)}</div>`:''}</div>`;
+  if(f.type==='scale'){
+    const max=f.max!=null?f.max:10;
+    const req=f.required?'<span class="field-req"> *</span>':'';
+    const buttons=Array.from({length:max+1},(_,v)=>`<div class="scale-btn" data-i="${i}" data-v="${v}" onclick="selectScale(${i},${v})">${v===max?(v+'+'):v}</div>`).join('');
+    return`<div class="field-wrap" id="fw-${i}">
+      <label class="field-label">${f.label||''}${req}</label>
+      ${f.label2?`<div class="field-label2">${f.label2}</div>`:''}
+      <div class="scale-grid" id="scale-${i}">${buttons}</div>
+    </div>`;
+  }
+  if(f.type==='consent'){
+    const req=f.required!==false?'<span class="field-req"> *</span>':'';
+    return`<div class="field-wrap" id="fw-${i}">
+      <div class="consent-block">${esc(f.content)}${f.content2?`<div class="sec2">${esc(f.content2)}</div>`:''}
+        <label class="consent-check">
+          <input type="checkbox" id="field-${i}" data-key="${f.key||'consent'}"/>
+          <span>${esc(f.label||'I agree')}${f.label2?' / '+esc(f.label2):''}${req}</span>
+        </label>
+      </div>
+    </div>`;
+  }
+  if(f.type==='signature') return`<div class="field-wrap" id="fw-${i}">
+      <label class="field-label">${f.label||'Signature'} ${f.required?'<span class="field-req">*</span>':''}
+        <button class="btn-s" onclick="clearSig()" style="margin-left:8px">✕ Clear</button>
+      </label>
+      <div class="sig-wrap"><canvas id="sig-canvas-${i}"></canvas><span class="sig-hint">Draw your signature here</span></div>
+    </div>`;
+  const id=`field-${i}`;
+  const req=f.required?'<span class="field-req"> *</span>':'';
+  const label=`<label class="field-label" for="${id}">${f.label||''}${req}</label>`;
+  const label2=f.label2?`<div class="field-label2">${f.label2}</div>`:'';
+  const docTrigger=f.key==='document'?` oninput="onDocInput(this,${i})"`:'';
+  if(f.type==='textarea') return`<div class="field-wrap" id="fw-${i}">${label}${label2}<textarea class="fi" id="${id}" data-key="${f.key||''}" placeholder="${f.placeholder||''}" ${f.required?'required':''}></textarea></div>`;
+  if(f.type==='select') return`<div class="field-wrap" id="fw-${i}">${label}${label2}<select class="fi fsel" id="${id}" data-key="${f.key||''}" dir="rtl" style="text-align:right"><option value="">בחר...</option>${(f.options||[]).map(o=>{const opt=optLabel(o);return `<option value="${esc(opt.value!=null?opt.value:opt.label)}">${esc(opt.label)}${opt.label2?' / '+esc(opt.label2):''}</option>`;}).join('')}</select></div>`;
+  if(f.type==='radio') return`<div class="field-wrap" id="fw-${i}">${label}${label2}${(f.options||[]).map((o,oi)=>{const opt=optLabel(o);return `<label class="radio-opt"><input type="radio" name="${id}" value="${esc(opt.value!=null?opt.value:opt.label)}" data-key="${f.key||''}" data-oi="${oi}" onchange="onRadioChange(${i})"/> <span>${esc(opt.label)}${opt.label2?`<span class="opt-label2">${esc(opt.label2)}</span>`:''}</span></label>`;}).join('')}</div>`;
+  if(f.type==='checkbox') return`<div class="field-wrap" id="fw-${i}">${label}${label2}${(f.options||[]).map((o,oi)=>{const opt=optLabel(o);return `<label class="check-opt"><input type="checkbox" id="${id}-${oi}" value="${esc(opt.value!=null?opt.value:opt.label)}" data-key="${f.key||''}"/> <span>${esc(opt.label)}${opt.label2?`<span class="opt-label2">${esc(opt.label2)}</span>`:''}</span></label>`;}).join('')}</div>`;
+  if(f.type==='file') return`<div class="field-wrap" id="fw-${i}">${label}${label2}<input class="fi" type="file" id="${id}" data-key="${f.key||''}" accept="${f.accept||'*'}"/></div>`;
+  if(f.type==='image'){
+    if(!f.imageUrl) return`<div class="field-wrap" style="text-align:center;color:var(--hint)">[Image placeholder]</div>`;
+    return`<div class="field-wrap" style="padding:0;margin:10px 0"><img src="${esc(f.imageUrl)}" alt="${esc(f.imageAlt||'')}" style="width:100%;height:${esc(String(f.height||'auto'))}px;object-fit:${esc(f.fit||'cover')};border-radius:8px;display:block"/></div>`;
+  }
+  if(f.type==='video'&&f.videoUrl){
+    var vu=f.videoUrl,eu=vu;
+    var ytm=vu.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if(ytm) eu='https://www.youtube-nocookie.com/embed/'+ytm[1]+'?rel=0';
+    var vim=vu.match(/vimeo\.com\/(\d+)/);
+    if(vim) eu='https://player.vimeo.com/video/'+vim[1];
+    return`<div class="field-wrap"><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px"><iframe src="${esc(eu)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe></div></div>`;
+  }
+  var inputDir = (f.key==='document'||f.type==='email'||f.type==='date') ? 'ltr' : 'rtl';
+  return`<div class="field-wrap" id="fw-${i}">${label}${label2}<input class="fi" type="${f.type==='phone'?'tel':f.type==='email'?'email':f.type==='number'?'number':f.type==='date'?'date':'text'}" id="${id}" data-key="${f.key||''}" placeholder="${f.placeholder||''}" ${f.required?'required':''}${docTrigger} dir="${inputDir}"/></div>`;
+}
+
+function renderFormFields(fields){
+  buildPages(fields);
+  const container=document.getElementById('form-fields-render');
+  container.innerHTML = pageGroups.map((idxs,p)=>{
+    const html = idxs.map(i=>renderOneField(fields[i],i)).join('');
+    return `<div class="fpage" data-page="${p}" style="display:${p===0?'block':'none'}">${html}</div>`;
+  }).join('') + `<div class="fpage" id="disq-page" style="display:none"></div>`;
+  currentPage=0;
+  showPage(0);
+  // Apply field validation masks based on data-key
+  // Check if form has inherit_validation flag OR if global config is enabled
+  setTimeout(function(){
+    // Build a field index by key for quick lookup
+    var fieldByKey = {};
+    (formDef.fields||[]).forEach(function(f){ if(f.key) fieldByKey[f.key] = f; });
+    // Apply special masks for DEFAULT_FORM fields based on _xxx flags
+    (formDef.fields||[]).forEach(function(f, fi){
+      if(f._useCityAutocomplete){
+        var el = document.getElementById('field-'+fi);
+        if(el) initCityAutocomplete(el);
+      }
+      if(f._streetMask){
+        var el2 = document.getElementById('field-'+fi);
+        if(el2) el2.addEventListener('input', function(){
+          this.value = this.value.replace(/[^\u05D0-\u05EA\u05F0-\u05F4 \-]/g, '');
+        });
+      }
+      if(f._houseMask){
+        var el3 = document.getElementById('field-'+fi);
+        if(el3) el3.addEventListener('input', function(){
+          var v = this.value.replace(/[^א-ת\d]/g, '');
+          var letters=[]; var digits=[];
+          for(var ci=0;ci<v.length;ci++){
+            if(/[א-ת]/.test(v[ci])){ if(letters.length===0) letters.push(v[ci]); }
+            else digits.push(v[ci]);
+          }
+          var firstL=-1,firstD=-1;
+          for(var ci=0;ci<this.value.length;ci++){
+            if(/[א-ת]/.test(this.value[ci])&&firstL===-1)firstL=ci;
+            if(/\d/.test(this.value[ci])&&firstD===-1)firstD=ci;
+          }
+          var res;
+          if(!letters.length) res=digits.join('').slice(0,5);
+          else if(!digits.length) res=letters[0];
+          else if(firstL<firstD) res=letters[0]+digits.join('').slice(0,5);
+          else res=digits.join('').slice(0,5)+letters[0];
+          this.value=res;
+        });
+      }
+    });
+    document.querySelectorAll('[data-key]').forEach(function(el){
+      const k = el.getAttribute('data-key');
+      const cfg = window.VALIDATION_CONFIG || {};
+      const fd = fieldByKey[k] || {};
+      const fv = fd.validation || {};
+
+      // Helper: is a rule enabled? Field-level > global > inherit_validation
+      function ruleOn(cfgKey, ruleKey) {
+        if(fv[ruleKey] !== undefined) return fv[ruleKey];
+        const g = cfg[cfgKey];
+        if(g && g.enabled !== undefined) return g.enabled;
+        return formDef.inherit_validation || false;
+      }
+
+      if((k==='first_name'||k==='last_name') && ruleOn('name','hebrewOnly')) maskNameInput(el);
+      if(k==='document' && ruleOn('document','documentFormat')) maskDocInput(el);
+      if(k==='phone' && ruleOn('phone','phoneDigits')) maskPhoneInput(el);
+      if(k==='address' && ruleOn('address','addressStreetNum')) maskAddressInput(el);
+      if(k==='city' && ruleOn('city','cityAutocomplete')) initCityAutocomplete(el);
+      clearFieldErrorOnInput(el);
+    });
+  }, 100);
+}
+
+function showPage(p){
+  document.querySelectorAll('#form-fields-render > .fpage[data-page]').forEach(el=>{
+    el.style.display = (String(el.dataset.page)===String(p)) ? 'block':'none';
+  });
+  // init any signature canvases on this page (lazy init for correct sizing)
+  (pageGroups[p]||[]).forEach(i=>{
+    const f=formDef.fields[i];
+    if(f.type==='signature'){ const c=document.getElementById('sig-canvas-'+i); if(c&&!c._ctx) initSig(i); }
+  });
+  const total=pageGroups.length;
+  const backBtn=document.getElementById('back-btn');
+  const nextBtn=document.getElementById('next-btn');
+  const submitBtn=document.getElementById('submit-btn');
+  const fnav=document.getElementById('fnav');
+  const progWrap=document.getElementById('progress-wrap');
+  if(total>1){
+    progWrap.style.display='block';
+    fnav.style.display='flex';
+    backBtn.style.display = p>0 ? 'flex':'none';
+    nextBtn.style.display = p<total-1 ? 'flex':'none';
+    submitBtn.style.display = p===total-1 ? 'flex':'none';
+    document.getElementById('progress-fill').style.width = ((p+1)/total*100)+'%';
+    document.getElementById('progress-text').textContent = 'Page '+(p+1)+' of '+total+(pageTitles[p]?(' \u00B7 '+pageTitles[p]):'');
+  } else {
+    progWrap.style.display='none';
+    fnav.style.display='none';
+    submitBtn.style.display='flex';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectScale(i,v){
+  scaleValues[i]=v;
+  document.querySelectorAll(`#scale-${i} .scale-btn`).forEach(b=>{
+    b.classList.toggle('sel', parseInt(b.dataset.v)===v);
+  });
+}
+
+function onRadioChange(i){
+  const f=formDef.fields[i];
+  const sel=document.querySelector(`[name="field-${i}"]:checked`);
+  if(!sel)return;
+  const oi=parseInt(sel.dataset.oi);
+  const opt=optLabel((f.options||[])[oi]);
+  if(opt&&opt.disqualify){
+    showDisqualify(opt);
+  } else if(disqualified){
+    hideDisqualify();
+  }
+}
+
+function showDisqualify(opt){
+  disqualified=true;
+  document.querySelectorAll('#form-fields-render > .fpage[data-page]').forEach(el=>el.style.display='none');
+  const dp=document.getElementById('disq-page');
+  dp.innerHTML=`<div class="disq-block">${esc(opt.disqualifyMsg)}${opt.disqualifyMsg2?`<div class="sec2">${esc(opt.disqualifyMsg2)}</div>`:''}</div>`;
+  dp.style.display='block';
+  document.getElementById('fnav').style.display='none';
+  document.getElementById('submit-btn').style.display='none';
+  document.getElementById('progress-wrap').style.display='none';
+}
+
+function hideDisqualify(){
+  disqualified=false;
+  document.getElementById('disq-page').style.display='none';
+  document.getElementById('disq-page').innerHTML='';
+  showPage(currentPage);
+}
+
+// Validate a single field; returns true if valid (also surfaces errors via toast/border)
+function validateField(f,i){
+  if(['divider','heading','info','pagebreak'].includes(f.type))return true;
+  if(f.type==='signature'){
+    const canvas=document.getElementById('sig-canvas-'+i);
+    if(f.required&&canvas&&!canvas._has){showToast('Please draw your signature.','ter');return false;}
+    return true;
+  }
+  if(f.type==='scale'){
+    if(f.required&&scaleValues[i]===undefined){showToast('Please answer: '+(f.label||''),'ter');return false;}
+    return true;
+  }
+  if(f.type==='consent'){
+    const cb=document.getElementById('field-'+i);
+    if(f.required!==false&&cb&&!cb.checked){showToast((f.errorMsg||'Please confirm: '+(f.label||'consent')),'ter');return false;}
+    return true;
+  }
+  if(f.type==='checkbox'){
+    const checked=[...document.querySelectorAll(`[id^="field-${i}-"]:checked`)];
+    if(f.required&&!checked.length){showToast('Please answer: '+(f.label||''),'ter');return false;}
+    return true;
+  }
+  if(f.type==='radio'){
+    const sel=document.querySelector(`[name="field-${i}"]:checked`);
+    if(f.required&&!sel){showToast('Please answer: '+(f.label||''),'ter');return false;}
+    return true;
+  }
+  const el=document.getElementById('field-'+i);
+  if(!el)return true;
+  const val=el.value?.trim()||'';
+  if(f.required&&!val){
+    const msg=f.errorMsg||('Required: '+(f.label||''));
+    showToast(msg,'ter');el.style.borderColor='#F09595';el.focus();return false;
+  }
+  if(val){
+    if(f.numbersOnly&&!/^[0-9]+$/.test(val)){
+      const msg=f.errorMsg||((f.label||'')+': numbers only');
+      showToast(msg,'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    if(f.lettersOnly&&!/^[^\d]+$/.test(val)){
+      const msg=f.errorMsg||((f.label||'')+': letters only');
+      showToast(msg,'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    if(f.minLength&&val.length<f.minLength){
+      const msg=f.errorMsg||((f.label||'')+': minimum '+f.minLength+' characters');
+      showToast(msg,'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    if(f.maxLength&&val.length>f.maxLength){
+      const msg=f.errorMsg||((f.label||'')+': maximum '+f.maxLength+' characters');
+      showToast(msg,'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    if(f.type==='number'&&f.min!=null&&parseFloat(val)<f.min){
+      showToast((f.errorMsg||(f.label||'')+': minimum value is '+f.min),'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    if(f.type==='number'&&f.max!=null&&parseFloat(val)>f.max){
+      showToast((f.errorMsg||(f.label||'')+': maximum value is '+f.max),'ter');el.style.borderColor='#F09595';el.focus();return false;
+    }
+    // AidBase key-based smart validation with per-field overrides
+    if(typeof validateFieldVal === 'function'){
+      const k = f.key||'';
+      const fv = f.validation || {};
+      const cfg = window.VALIDATION_CONFIG || {};
+      function ruleOn2(cfgKey, ruleKey) {
+        if(fv[ruleKey] !== undefined) return fv[ruleKey];
+        const g = cfg[cfgKey];
+        if(g && g.enabled !== undefined) return g.enabled;
+        return false;
+      }
+      function ruleMsg2(cfgKey, ruleKey) {
+        if(fv[ruleKey+'Msg']) return fv[ruleKey+'Msg'];
+        return (cfg[cfgKey] && cfg[cfgKey].errorMsg) || '';
+      }
+      if((k==='first_name'||k==='last_name') && ruleOn2('name','hebrewOnly')){
+        const m = ruleMsg2('name','hebrewOnly');
+        if(m) window.VALIDATION_CONFIG.name = Object.assign({}, cfg.name||{}, {errorMsg:m});
+        if(!validateFieldVal(el,'name')){ el.focus(); return false; }
+      }
+      if(k==='document' && ruleOn2('document','documentFormat')){
+        const m = ruleMsg2('document','documentFormat');
+        if(m) window.VALIDATION_CONFIG.document = Object.assign({}, cfg.document||{}, {errorMsg:m});
+        if(!validateFieldVal(el,'document')){ el.focus(); return false; }
+      }
+      if(k==='phone' && ruleOn2('phone','phoneDigits')){
+        const m = ruleMsg2('phone','phoneDigits');
+        if(m) window.VALIDATION_CONFIG.phone = Object.assign({}, cfg.phone||{}, {errorMsg:m});
+        if(!validateFieldVal(el,'phone')){ el.focus(); return false; }
+      }
+      if(k==='address' && ruleOn2('address','addressStreetNum')){
+        const m = ruleMsg2('address','addressStreetNum');
+        if(m) window.VALIDATION_CONFIG.address = Object.assign({}, cfg.address||{}, {errorMsg:m});
+        if(!validateFieldVal(el,'address')){ el.focus(); return false; }
+      }
+    }
+  }
+  el.style.borderColor='';
+  return true;
+}
+
+function validatePage(p){
+  const fields=formDef?.fields||[];
+  let valid=true;
+  (pageGroups[p]||[]).forEach(i=>{ if(!validateField(fields[i],i)) valid=false; });
+  return valid;
+}
+
+function nextPage(){
+  if(!validatePage(currentPage))return;
+  if(currentPage<pageGroups.length-1){currentPage++;showPage(currentPage);}
+}
+function prevPage(){
+  if(currentPage>0){currentPage--;showPage(currentPage);}
+}
+let docSearchTimer=null;
+function onDocInput(input,fieldIdx){
+  clearTimeout(docSearchTimer);
+  const val=input.value.trim();
+  if(val.length<4){autoFilledPerson=null;document.getElementById('id-banner').classList.remove('show');clearAutoFill();return;}
+  docSearchTimer=setTimeout(async()=>{
+    try{
+      const rows=await sb('people?select=*&document=eq.'+encodeURIComponent(val));
+      if(rows.length){
+        autoFilledPerson=rows[0];
+        autoFill(rows[0]);
+        document.getElementById('id-banner-text').textContent='✓ Identified: '+rows[0].first_name+' '+rows[0].last_name+' — data filled automatically';
+        document.getElementById('id-banner').classList.add('show');
+      } else {
+        autoFilledPerson=null;
+        document.getElementById('id-banner').classList.remove('show');
+      }
+    }catch(e){}
+  },600);
+}
+
+const KEY_MAP={'first_name':'first_name','last_name':'last_name','document':'document','phone':'phone','city':'city','address':'address','family_status':'family_status','children':'children'};
+function autoFill(person){
+  const fields=formDef?.fields||[];
+  fields.forEach((f,i)=>{
+    if(!f.key||f.key==='document')return;
+    const el=document.getElementById('field-'+i);
+    if(!el)return;
+    const val=person[KEY_MAP[f.key]||f.key];
+    if(val!==undefined&&val!==null){
+      el.value=val;
+      el.classList.add('af');
+    }
+  });
+}
+function clearAutoFill(){
+  document.querySelectorAll('.fi.af').forEach(e=>{e.value='';e.classList.remove('af');});
+}
+
+function initSig(idx){
+  const canvas=document.getElementById('sig-canvas-'+idx);if(!canvas)return;
+  const wrap=canvas.parentElement;
+  canvas.width=wrap.offsetWidth||580;canvas.height=140;
+  const ctx=canvas.getContext('2d');
+  ctx.strokeStyle='#1A1917';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';
+  canvas._ctx=ctx;canvas._has=false;
+  const hint=canvas.nextElementSibling;
+  function pos(e){const r=canvas.getBoundingClientRect();const sx=canvas.width/r.width,sy=canvas.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
+  let drawing=false;
+  canvas.onmousedown=e=>{drawing=true;canvas._has=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);if(hint)hint.style.display='none';};
+  canvas.onmousemove=e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();};
+  canvas.onmouseup=()=>drawing=false;canvas.onmouseleave=()=>drawing=false;
+  canvas.ontouchstart=e=>{e.preventDefault();drawing=true;canvas._has=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);if(hint)hint.style.display='none';};
+  canvas.ontouchmove=e=>{e.preventDefault();if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();};
+  canvas.ontouchend=()=>drawing=false;
+}
+
+function clearSig(){
+  document.querySelectorAll('[id^="sig-canvas-"]').forEach(c=>{if(c._ctx){c._ctx.clearRect(0,0,c.width,c.height);c._has=false;const h=c.nextElementSibling;if(h)h.style.display='';}});
+}
+
+async function submitPublicForm(){
+  const fields=formDef?.fields||[];
+  // Validate current page (last page) + collect data from ALL pages (in case of multi-page,
+  // earlier pages were already validated on Next, but we re-collect their data here)
+  if(!validatePage(currentPage))return;
+
+  const data={};
+  fields.forEach((f,i)=>{
+    if(['divider','heading','info','pagebreak'].includes(f.type))return;
+    if(f.type==='signature'){
+      const canvas=document.getElementById('sig-canvas-'+i);
+      if(canvas&&canvas._has) data.signature=canvas.toDataURL('image/png');
+      return;
+    }
+    if(f.type==='scale'){
+      if(scaleValues[i]!==undefined){
+        const max=f.max!=null?f.max:10;
+        data[f.key||'field_'+i]= scaleValues[i]===max ? (max+'+') : String(scaleValues[i]);
+      }
+      return;
+    }
+    if(f.type==='consent'){
+      const cb=document.getElementById('field-'+i);
+      data[f.key||'consent']= cb&&cb.checked ? 'yes':'no';
+      return;
+    }
+    if(f.type==='checkbox'){
+      const checked=[...document.querySelectorAll(`[id^="field-${i}-"]:checked`)].map(e=>e.value);
+      data[f.key||'field_'+i]=checked.join(', ');
+      return;
+    }
+    if(f.type==='radio'){
+      const sel=document.querySelector(`[name="field-${i}"]:checked`);
+      data[f.key||'field_'+i]=sel?sel.value:'';
+      return;
+    }
+    const el=document.getElementById('field-'+i);
+    if(!el)return;
+    data[f.key||'field_'+i]=el.value?.trim()||'';
+  });
+
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;loading(true);
+  try{
+    // Upsert person if we have identity data
+    let personId=autoFilledPerson?.id||null;
+    const docVal=data.document||data.first_name&&data.last_name?data.document:null;
+    if(!personId&&docVal){
+      const existing=await sb('people?select=id&document=eq.'+encodeURIComponent(docVal));
+      if(existing.length) personId=existing[0].id;
+    }
+    if(!personId&&data.first_name&&data.last_name&&data.document){
+      const inserted=await sb('people',{method:'POST',body:JSON.stringify([{
+        first_name:data.first_name,last_name:data.last_name,document:data.document,
+        phone:data.phone||'',city:data.city||'',address:data.address||'',
+        family_status:data.family_status||'',children:data.children||'',
+        color:COLORS[Math.floor(Math.random()*COLORS.length)]
+      }])});
+      personId=inserted[0]?.id;
+    }
+    // Save signature if delivery type
+    if(data.signature&&personId&&formDef.project_id){
+      const alreadySigned=await sb('signatures?select=id&person_id=eq.'+personId+'&project_id=eq.'+formDef.project_id);
+      if(!alreadySigned.length){
+        const now=new Date();
+        await sb('signatures',{method:'POST',body:JSON.stringify([{
+          person_id:personId,project_id:formDef.project_id,
+          signed_at:now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
+          hash:Array.from({length:48},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join(''),
+          sig_data:data.signature
+        }])});
+      }
+    }
+    // Save form response
+    await sb('form_responses',{method:'POST',body:JSON.stringify([{
+      form_id:formDef.id,person_id:personId,project_id:formDef.project_id||null,data
+    }])});
+    document.getElementById('view-form').style.display='none';
+    document.getElementById('view-success').classList.add('show');
+  }catch(e){showToast('Error submitting: '+e.message,'ter');}
+  finally{btn.disabled=false;loading(false);}
+}
+init();
+
+// ============================================================
+// AidBase Field Validation Module v2
+// Rules: Hebrew-only names, ID/passport, phone, address, city
+// All rules are configurable and can be disabled per field.
+// ============================================================
+const CITIES_IL = [
+"אבו גוש","אבו סנאן","אבירים","אבן יהודה","אבן שמואל","אביחיל","אביטל","אביעזר","אבנת","אבשלום",
+"אדמית","אודים","אודם","אוהד","אור יהודה","אור עקיבא","אורה","אורות","אורטל","אורים","אזור",
+"אחווה","אחוזם","אחיהוד","אחיסמך","אחיעזר","אכסאל","אל-בטוף","אל-עריאן","אלוני הבשן","אלוני יצחק",
+"אלוניים","אלי-עד","אליכין","אליפז","אלישיב","אלישמע","אלמגור","אלמוג","אלעד","אלעזר","אלפי מנשה",
+"אלקוש","אלקנה","אמונים","אמציה","אמירים","ארבל","ארז","אריאל","ארסוף","אשבול","אשדוד","אשדות יעקב",
+"אשכול","אשקלון","אתר","באקה אל-גרביה","באר יעקב","באר שבע","באר טוביה","בארות יצחק","בארותיים",
+"בגין","בוסתן הגליל","בועיינה-נוג'ידאת","בחן","בטחה","בית אל","בית אלפא","בית אריה","בית גוברין",
+"בית דגן","בית הגדי","בית הלוי","בית הנסיה","בית השיטה","בית זרע","בית חגי","בית חירות","בית חנן",
+"בית חנניה","בית יוסף","בית יצחק","בית ינאי","בית לחם הגלילית","בית נחמיה","בית נקופה","בית עוזיאל",
+"בית עזרא","בית עריף","בית קמה","בית רימון","בית שאן","בית שמש","בית שערים","בני ברק","בני דרור",
+"בני דרום","בני עי'ש","בני ציון","בני ראם","בניה","בנימינה","בסמת טבעון","בצת","בקוע","בקעות",
+"בר גיורא","בר יוחאי","ברוש","ברכיה","ברעם","ברקאי","ברקן","ברקת","בת הדר","בת חן","בת ים",
+"בת שלמה","בת-ים","גאולי תימן","גאולים","גב ים","גבולות","גבים","גבע","גבע בנימין","גבע כרמל",
+"גבעות בר","גבעת אבני","גבעת אלה","גבעת ברנר","גבעת זאב","גבעת יערים","גבעת כ\"ח","גבעת ניל\"י",
+"גבעת עוז","גבעת שמואל","גבעת שמש","גבעתי","גבעתיים","גברעם","גדות","גדיש","גדעונה","גדרה",
+"גולן","גומא","גונן","גורן","גורנות הגליל","גזר","גיאה","גיבתון","גילון","גילת","גינוסר","גינתון",
+"גיתה","גיתית","גלאון","גמזו","גן הדרום","גן השומרון","גן יאשיה","גן יבנה","גן נר","גן שורק",
+"גן שלמה","גן שמואל","גניגר","גנת","גנות","גנות הדר","גפן","גרופית","גשר","גשר הזיו","גשרון",
+"גת","גת רימון","דבורה","דביר","דברת","דגניה א","דגניה ב","דולב","דור","דורות","דייר אל-אסד",
+"דייר חנא","דימונה","דישון","דלייה","דלתון","דמיידה","דפנה","דקל","דרום השרון",
+"האון","הבונים","הגושרים","הוד השרון","הושעיה","הזורע","הזורעים","החותרים","היוגב","הכפר הירוק",
+"הלל","המעפיל","הסוללים","הסתדרות","הפורים","הר אדר","הר גילה","הר עמשא","הראל","הרצליה",
+"השומרון","התקווה",
+"ואדי סלאמה","ורד יריחו","זבדיאל","זוהר","זיקים","זיתן","זכרון יעקב","זמר","זנוח","זרחיה",
+"ח'ואלד","חבצלת השרון","חברון","חגור","חגי","חגלה","חד-נס","חדיד","חדרה","חוות עדן","חוות שדה",
+"חולדה","חולון","חולית","חוקוק","חורה","חורפיש","חזון","חיבת ציון","חיפה","חירות","חלוץ","חמד",
+"חמדיה","חמדת","חמרה","חנתון","חספין","חפץ חיים","חצב","חצבה","חצור הגלילית","חצור-אשדוד",
+"חריש","חרמש","חרות","טבריה","טבעון","טייבה","טירה","טירת יהודה","טירת כרמל","טירת צבי",
+"טל מנשה","טל שחר","טללים","טמרה","טנא","טפחות",
+"יבנאל","יבנה","יגור","יד בנימין","יד חנה","יד מרדכי","יד נתן","יד רמבם","יהוד","יהוד מונוסון",
+"יובל","יוטבתה","יונתן","יחיעם","יכיני","ינוח-ג'ת","יסוד המעלה","יסודות","יסעור","יעד","יעל",
+"יפיע","יפית","יפרח","יצהר","יקום","יקיר","יקנעם","יראון","ירדנה","ירוחם","ירושלים","ירחיב",
+"ישע","ישעי","ישרש",
+"כאבול","כאוכב אבו אל הيجא","כברי","כדורי","כוכב יאיר","כוכב מיכאל","כוכב הצפון",
+"כחל","כיסופים","כינרת","כישור","כמהין","כנות","כנף","כסיפה","כסרא-סמיע","כפר אדומים",
+"כפר אוריה","כפר ביאליק","כפר ברא","כפר גדעון","כפר גלים","כפר דניאל","כפר האורנים","כפר הורש",
+"כפר הים","כפר הנגיד","כפר הנשיא","כפר הס","כפר הרא\"ה","כפר ויתקין","כפר זיתים","כפר חב\"ד",
+"כפר חיטים","כפר חנניה","כפר חסידים","כפר יהושע","כפר יונה","כפר יחזקאל","כפר כמא","כפר כנא",
+"כפר מונש","כפר מימון","כפר מנדא","כפר מסריק","כפר מצר","כפר נטר","כפר סאלד","כפר סבא",
+"כפר עבודה","כפר עזה","כפר עציון","כפר קיש","כפר קרע","כפר ראש הנקרה","כפר רופין","כפר רות",
+"כפר שמאי","כפר שמריהו","כפר תבור","כפר תפוח","כרכום","כרם בן זמרה","כרם יבנה","כרם שלום",
+"כרמאל","כרמי יוסף","כרמיאל","כרמים","כרמית","כרמיה","כרמל",
+"לביא","לבנים","לוד","לוזית","לוטם","לוטן","לחי","לימן","לכיש",
+"מאור","מאיר שפיה","מבוא ביתר","מבוא דותן","מבוא חורון","מבוא מודיעים","מבואות ים","מבועים",
+"מבטחים","מגאר","מגד הרוש","מגדל","מגדל העמק","מגדל עוז","מגדלים","מגידו","מגל","מגן",
+"מגן שאול","מגשימים","מדרך עוז","מדרשת בן גוריון","מודיעין","מודיעין מכבים רעות","מולדת",
+"מורן","מורשת","מזור","מזכרת בתיה","מזרעה","מחולה","מחנה טלי","מחנה יהודית","מחנה יוסף",
+"מחנה יתיר","מחניים","מחסיה","מטה אשר","מטה בנימין","מטה יהודה","מיטב","מיסמר","מיצד",
+"מירב","מירון","מישב","מישמר איילון","מישמר דוד","מישמר הירדן","מישמר הנגב","מישמר העמק",
+"מישמר השבעה","מישמר השרון","מיתר","מכמורת","מכמש","מלאה","מנוחה","מנות","מנחמיה","מנרה",
+"מנשית זבדה","מסד","מסדה","מסילות","מסילת ציון","מסלול","מסעדה","מסעדין","מעגלים","מעוז חיים",
+"מעין ברוך","מעין צבי","מעלה אדומים","מעלה אפרים","מעלה גלבוע","מעלה גמלא","מעלה החמישה",
+"מעלה לבונה","מעלה מכמש","מעלה עירון","מעלה עמוס","מעלה שומרון","מעלות תרשיחא","מעמר",
+"מענית","מפלסים","מצובה","מצוקי דרגות","מצליח","מצפה","מצפה אבי\"ב","מצפה אילן","מצפה יריחו",
+"מצפה נטופה","מצפה רמון","מצפה שלם","מקווה ישראל","מרגליות","מרום גולן","מרחביה","מרכז שפירא",
+"משאבי שדה","משגב","משגב עם","משהד","משואות יצחק","משכיות","משמר הירדן","משמר השרון",
+"משמרת","משען","מתת","מתתיהו",
+"נאות גולן","נאות הכיכר","נאות מרדכי","נאות סמדר","נבטים","נגבה","נהלל","נהריה","נועם",
+"נוף הגליל","נופים","נופית","נוקדים","נורדיה","נורית","נחל עוז","נחליאל","נחם","נחשולים",
+"נחשון","נחשונים","ניין","ניל\"י","ניצן","ניצן ב","ניצנה","ניצני עוז","ניצנים","ניר אליהו",
+"ניר בנים","ניר גלים","ניר דוד","ניר חן","ניר ישראל","ניר יצחק","ניר עם","ניר עקיבא","ניר צבי",
+"נס הרים","נס ציונה","נתיב הגדוד","נתיב הל\"ה","נתיב השיירה","נתיבות","נתניה",
+"סאג'ור","סביון","סגולה","סדה","סדות מיכה","סולם","סומסום","סח'נין","סינדיאנה","סלמה","סנסנה",
+"סעד","סעוה","ספיר","סתריה",
+"עברון","עגור","עדי","עדנים","עובדיה","עוזה","עוזייר","עולש","עומר","עופר","עופרה","עוצם",
+"עוקבי בנו","עזוז","עזר","עזריאל","עזריה","עזריקם","עטרות","עיינות","עיר כרמים","עכו","עלומות",
+"עלי","עלי זהב","עלמה","עלמון","עמוקה","עמיחי","עמינדב","עמיעד","עמיעוז","עמיקם","עמיר",
+"עמנואל","עמקה","ענב","עספיא","עפולה","עצמון שגב","עקבת ג'בר","ערב","ערד","עררה","עש",
+"פארן","פדואל","פדיה","פדיות","פוריה","פוריה עילית","פוריה נווה עובד","פטיש","פלך","פלמחים",
+"פנינה","פסגות","פסות","פציר","פקיעין","פקיעין חדשה","פרדס חנה","פרדסיה","פרוד","פרזון","פרי גן",
+"פתח תקווה","צאלים","צביה","צבעון","צובה","צוחר","צוקי ים","צוקים","צור הדסה","צור יצחק",
+"צור משה","צור נתן","צורן","צחר","צלפון","צפריה","צפרירים","צפת","צרופה",
+"קבוצת יבנה","קדומים","קדימה","קדמה","קדמת צבי","קדרון","קדרים","קומי אורה","קוקב","קטורה",
+"קיבוץ גלויות","קיסריה","קלחים","קליה","קלנסווה","קנות","קציר","קצר אל-סר","קצרין",
+"קרוב","קריית אונו","קריית אתא","קריית ביאליק","קריית גת","קריית טבעון","קריית ים","קריית מוצקין",
+"קריית מלאכי","קריית נטפים","קריית עקרון","קריית שלמה","קריית שמונה","קריית תירוש",
+"ראמה","ראש העין","ראש הנקרה","ראש פינה","ראש צורים","ראשון לציון","רבבה","רביד","רגבה",
+"רהט","רובע ו","ריחאניה","ריינה","ריחן","רכסים","רם-און","רמות","רמות השבים","רמות מאיר","רמות נפתלי",
+"רמות פולין","רמות ענבים","רמלה","רמת גן","רמת דוד","רמת הכובש","רמת הנדיב","רמת השרון",
+"רמת יוחנן","רמת ישי","רמת מגשימים","רמת צבי","רמת רחל","רמת רזיאל","רמת שלמה","רמת שפר",
+"רנן","רעים","רעננה","רקפת","רתמים",
+"שאר ישוב","שבי ציון","שבי שומרון","שגב-שלום","שדה אילן","שדה בוקר","שדה דוד","שדה ורבורג",
+"שדה יואב","שדה יעקב","שדה יצחק","שדה מיכה","שדה נחום","שדה נחמיה","שדה עוזיהו","שדה צבי",
+"שדות ים","שדות מיכה","שדמה","שדמות דבורה","שדרות","שוהם","שומרה","שומריה","שוקדה","שורש",
+"שזור","שחר","שחרות","שיבולים","שייח' דנון","שיטים","שילה","שיפר","שכניה","שלווה","שלומי",
+"שלומית","שלפים","שמיר","שמרת","שמשית","שניר","שסגב","שעב","שעל","שעלבים","שעפאט","שפיים",
+"שפיר","שפר","שפרעם","שקד","שקף","שרות","שריד","שרשרת",
+"תדהר","תובל","תומר","תחנת בית יהושע","תימורים","תירוש","תל אביב","תל מונד","תל עדשים",
+"תל שבע","תלמי אלעזר","תלמי ביל\"ו","תלמי יוסף","תלמי יחיאל","תלמים","תמרת","תנובות",
+"תעוז","תפרח","תקוע","תקומה","תראבין","תרום"
+];
+
+// Validation config — can be overridden per page
+// Load saved validation config from localStorage (editable in admin Settings)
+(function(){
+  try {
+    const saved = localStorage.getItem('aidbase_validation_config');
+    if(saved) { window.VALIDATION_CONFIG = JSON.parse(saved); return; }
+  } catch(e){}
+  window.VALIDATION_CONFIG = window.VALIDATION_CONFIG || {
+  name: {
+    enabled: true,
+    hebrewOnly: true,
+    errorMsg: 'אנא מלא/י בעברית בלבד / Пожалуйста, заполняйте только на иврите'
+  },
+  document: {
+    enabled: true,
+    // mode: 'teudat' (9 digits), 'darkon' (2 capital letters + 7 digits), 'auto' (detect)
+    mode: 'auto',
+    errorMsg: 'מספר תעודת הזהות לא תקין / Номер удостоверения введен некорректно',
+  },
+  phone: {
+    enabled: true,
+    digits: 9,
+    errorMsg: 'טלפון: 9 ספרות בלבד, ללא סמלים / Телефон: только 9 цифр'
+  },
+  address: {
+    enabled: true,
+    // Hebrew letters, numbers, slash, dash, space — apartments included
+    errorMsg: 'אנא כתוב גם שם הרחוב וגם מספר הבית / דירה / Пожалуйста, укажите название улицы и номер дома/квартиры.'
+  },
+  city: {
+    enabled: true,
+    useList: true
+  },
+  street: {
+    enabled: true,
+    hebrewOnly: true,
+    errorMsg: 'רחוב: אותיות עבריות בלבד / Улица: только ивритские буквы'
+  },
+  house: {
+    enabled: true,
+    errorMsg: 'בית: מספר, מספר+אות אחת, או אות אחת בלבד / Дом: цифра, цифра+буква, или одна буква'
+  },
+  apt: {
+    enabled: true,
+    errorMsg: 'דירה: מספר, מספר+אות אחת, או אות אחת בלבד / Квартира: цифра, цифра+буква, или одна буква'
+  }
+};
+})();
+
+// ── Validation helpers ──────────────────────────────────────
+function valHebrew(val) {
+  // Hebrew letters only (including final forms), spaces allowed
+  return /^[\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E\s\-'\"]+$/.test(val.trim());
+}
+
+function valDocument(val) {
+  const v = val.trim();
+  // Teudat Zehut: exactly 9 digits
+  if (/^\d{9}$/.test(v)) return {ok:true, type:'teudat'};
+  // Foreign passport: 1-2 uppercase Latin letters + 7 digits
+  if (/^[A-Z]{1,2}\d{7}$/.test(v)) return {ok:true, type:'darkon'};
+  return {ok:false};
+}
+
+function valPhone(val) {
+  const v = val.replace(/[\s\-\(\)]/g, '');
+  return /^\d{9,10}$/.test(v);
+}
+
+function valAddress(val) {
+  const v = val.trim();
+  if(!v) return true;
+  // Must contain at least one Hebrew word (street name)
+  const hasHebrew = /[א-ת]/.test(v);
+  // Must contain at least one digit (house/apt number)
+  const hasNumber = /\d/.test(v);
+  // Characters allowed: Hebrew, digits, space, /, -, ', ", comma, dot
+  const charsOk = /^[א-תװ-״יִ-פֿ0-9\s\/\-'",\.]+$/.test(v);
+  return hasHebrew && hasNumber && charsOk;
+}
+
+// ── Live input masking ──────────────────────────────────────
+function maskNameInput(input) {
+  // Block non-Hebrew characters (allow spaces, hyphens, apostrophes)
+  input.addEventListener('input', function() {
+    const c = this.value;
+    // Remove any character that is not Hebrew letter, space, hyphen or apostrophe
+    this.value = c.replace(/[^\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E\s\-'\"]/g, '');
+  });
+  input.addEventListener('keydown', function(e) {
+    // Allow: backspace, delete, arrows, tab, ctrl+a/c/v/x
+    if([8,9,37,38,39,40,46].includes(e.keyCode) || (e.ctrlKey||e.metaKey)) return;
+    const char = e.key;
+    if(char.length === 1 && !(/[א-תװ-״יִ-פֿ]/.test(char)) && !/[\s\-'"]/.test(char)) {
+      e.preventDefault();
+    }
+  });
+}
+
+function maskDocInput(input) {
+  input.setAttribute('dir','ltr');
+  input.style.textAlign = 'left';
+  input.addEventListener('input', function() {
+    // Allow: digits, and up to 2 uppercase Latin letters at start
+    let v = this.value.toUpperCase();
+    // Remove invalid chars
+    v = v.replace(/[^A-Z0-9]/g, '');
+    // Max 2 letters prefix
+    const letters = v.match(/^[A-Z]{0,2}/)[0];
+    const digits = v.slice(letters.length).replace(/[^0-9]/g, '');
+    var maxDigits = letters.length === 0 ? 9 : 7;
+    this.value = letters + digits.slice(0, maxDigits);
+  });
+}
+
+function maskPhoneInput(input) {
+  input.setAttribute('inputmode','numeric');
+  input.addEventListener('input', function() {
+    var digits = this.value.replace(/[^\d]/g, '').slice(0, 10);
+    this.value = digits;
+  });
+}
+
+function maskAddressInput(input) {
+  input.addEventListener('input', function() {
+    this.value = this.value.replace(/[^\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB4E0-9\s\/\-'",\.]/g, '');
+  });
+}
+
+// ── Show / hide error under a field ────────────────────────
+function showFieldError(input, msg) {
+  clearFieldError(input);
+  input.style.borderColor = '#A32D2D';
+  const err = document.createElement('div');
+  err.className = 'field-error-msg';
+  err.style.cssText = 'color:#A32D2D;font-size:12px;margin-top:4px;line-height:1.4';
+  err.textContent = msg;
+  input.parentNode.appendChild(err);
+}
+function clearFieldError(input) {
+  input.style.borderColor = '';
+  const old = input.parentNode.querySelector('.field-error-msg');
+  if(old) old.remove();
+}
+function clearFieldErrorOnInput(input) {
+  input.addEventListener('input', function() { clearFieldError(this); });
+  input.addEventListener('focus', function() { clearFieldError(this); });
+}
+
+// ── City autocomplete ───────────────────────────────────────
+function initCityAutocomplete(input) {
+  if(!input) return;
+  input.setAttribute('autocomplete','off');
+  input.setAttribute('dir','rtl');
+
+  const wrap = input.parentNode;
+  wrap.style.position = 'relative';
+
+  const dropdown = document.createElement('div');
+  dropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #E4E2DA;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:9999;max-height:220px;overflow-y:auto;display:none;font-size:13px;direction:rtl';
+  wrap.appendChild(dropdown);
+
+  input.addEventListener('input', function() {
+    const q = this.value.trim();
+    dropdown.innerHTML = '';
+    if(q.length < 1) { dropdown.style.display='none'; return; }
+    const matches = CITIES_IL.filter(c => c.startsWith(q) || c.includes(q)).slice(0,20);
+    if(!matches.length) { dropdown.style.display='none'; return; }
+    matches.forEach(city => {
+      const item = document.createElement('div');
+      item.style.cssText = 'padding:9px 14px;cursor:pointer;border-bottom:1px solid #F0EEE8';
+      item.textContent = city;
+      item.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        input.value = city;
+        dropdown.style.display = 'none';
+        clearFieldError(input);
+        input.dispatchEvent(new Event('change'));
+      });
+      item.addEventListener('mouseover', function(){ this.style.background='#E1F5EE'; });
+      item.addEventListener('mouseout', function(){ this.style.background=''; });
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = 'block';
+  });
+
+  input.addEventListener('blur', function() {
+    setTimeout(function(){ dropdown.style.display='none'; }, 200);
+  });
+  input.addEventListener('focus', function() {
+    if(this.value.trim().length >= 1) this.dispatchEvent(new Event('input'));
+  });
+}
+
+// ── Validate a single field ─────────────────────────────────
+function validateFieldVal(input, type) {
+  const val = input.value.trim();
+  const cfg = window.VALIDATION_CONFIG;
+  if(!val) return true; // empty = required check handles separately
+
+  if(type === 'name' && cfg.name.enabled) {
+    if(!valHebrew(val)) {
+      showFieldError(input, cfg.name.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'document' && cfg.document.enabled) {
+    const r = valDocument(val);
+    if(!r.ok) {
+      showFieldError(input, cfg.document.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'phone' && cfg.phone.enabled) {
+    if(!valPhone(val)) {
+      showFieldError(input, cfg.phone.errorMsg);
+      return false;
+    }
+  }
+  if(type === 'address' && cfg.address.enabled) {
+    if(!valAddress(val)) {
+      showFieldError(input, cfg.address.errorMsg);
+      return false;
+    }
+  }
+  return true;
+}
+
+// ── Apply all validations to a form ────────────────────────
+// fieldMap: { name:'#fn', name2:'#ln', doc:'#doc', phone:'#tel', address:'#addr', city:'#city' }
+function initFormValidation(fieldMap) {
+  const get = id => id ? document.querySelector(id) : null;
+
+  const fnEl  = get(fieldMap.name);
+  const lnEl  = get(fieldMap.name2);
+  const docEl = get(fieldMap.doc);
+  const telEl = get(fieldMap.phone);
+  const addrEl= get(fieldMap.address);
+  const cityEl= get(fieldMap.city);
+
+  if(fnEl)  { maskNameInput(fnEl);    clearFieldErrorOnInput(fnEl);  }
+  if(lnEl)  { maskNameInput(lnEl);    clearFieldErrorOnInput(lnEl);  }
+  if(docEl) { maskDocInput(docEl);    clearFieldErrorOnInput(docEl); }
+  if(telEl) { maskPhoneInput(telEl);  clearFieldErrorOnInput(telEl); }
+  if(addrEl){ maskAddressInput(addrEl); clearFieldErrorOnInput(addrEl); }
+  if(cityEl){ initCityAutocomplete(cityEl); clearFieldErrorOnInput(cityEl); }
+
+  // Return a validate function to call before submit
+  return function validateAll() {
+    let ok = true;
+    if(fnEl   && fnEl.value.trim())   ok = validateFieldVal(fnEl,   'name')    && ok;
+    if(lnEl   && lnEl.value.trim())   ok = validateFieldVal(lnEl,   'name')    && ok;
+    if(docEl  && docEl.value.trim())  ok = validateFieldVal(docEl,  'document')&& ok;
+    if(telEl  && telEl.value.trim())  ok = validateFieldVal(telEl,  'phone')   && ok;
+    if(addrEl && addrEl.value.trim()) ok = validateFieldVal(addrEl, 'address') && ok;
+    return ok;
+  };
+}
+
+</script>
+  <div style="text-align:center;padding:24px 0 32px;border-top:1px solid var(--border);margin-top:32px">
+    <a href="https://aidbase.netlify.app/landing.html" target="_blank" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;opacity:.6;transition:.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">
+      <div style="width:20px;height:20px;background:#1D9E75;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#6B6860">Powered by AidBase</span>
+    </a>
+  </div>
+</body>
+</html>
