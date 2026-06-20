@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiveFlow — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--t50:#E1F5EE;--t100:#9FE1CB;--t400:#1D9E75;--t600:#0F6E56;--t800:#085041;--a50:#FAEEDA;--a400:#BA7517;--a600:#854F0B;--r400:#D85A30;--bg:#fff;--bg2:#f6f7f5;--bg3:#f0f1ee;--tx:#1a1a18;--tx2:#5a5a55;--tx3:#8a8a83;--bd:rgba(0,0,0,0.10);--bd2:rgba(0,0,0,0.18);--rad:8px;--radl:12px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg3);color:var(--tx);min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg);border-bottom:0.5px solid var(--bd);position:sticky;top:0;z-index:50}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--t600)}
+.nav-logo span{color:var(--t400)}
+.nav-r{display:flex;align-items:center;gap:8px}
+.badge{font-size:11px;font-weight:500;padding:4px 10px;border-radius:var(--rad);background:var(--a50);color:var(--a600);border:0.5px solid #FAC775}
+.logout-btn{font-size:12px;color:var(--tx2);background:none;border:0.5px solid var(--bd2);padding:6px 12px;border-radius:var(--rad);cursor:pointer;font-family:'DM Sans',sans-serif}
+.logout-btn:hover{color:var(--r400);border-color:var(--r400)}
+.screen{display:none}.screen.active{display:block}
+.login-page{min-height:calc(100vh - 57px);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-wrap{width:100%;max-width:340px;background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--radl);padding:28px 24px}
+.login-icon{width:48px;height:48px;border-radius:50%;background:var(--a50);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--a600);font-size:22px}
+.login-title{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--tx2);text-align:center;margin-bottom:24px}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lf label{font-size:12px;font-weight:500;color:var(--tx2)}
+.lf input{padding:10px 12px;border:0.5px solid var(--bd2);border-radius:var(--rad);font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);outline:none;width:100%}
+.lf input:focus{border-color:var(--a400)}
+.pw-w{position:relative}.pw-w input{padding-left:40px}
+.pw-eye{position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--tx3);font-size:16px}
+.err{font-size:12px;color:var(--r400);margin-bottom:10px;display:none}
+.login-btn{width:100%;padding:12px;background:var(--a400);color:white;border:none;border-radius:var(--rad);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.login-btn:hover{background:var(--a600)}
+.layout{display:flex;min-height:calc(100vh - 57px)}
+.sb{width:220px;flex-shrink:0;background:var(--bg);border-right:0.5px solid var(--bd);padding:16px 0}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;font-weight:500;cursor:pointer;color:var(--tx2);border-left:3px solid transparent;transition:all .12s}
+.sb-item:hover{background:var(--bg2);color:var(--tx)}
+.sb-item.active{background:var(--t50);color:var(--t800);border-left-color:var(--t400)}
+.sb-item i{font-size:16px}
+.sb-sec{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.8px;text-transform:uppercase;padding:12px 18px 4px}
+.main{flex:1;padding:28px;overflow-y:auto}
+.pt{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:4px}
+.ps{font-size:13px;color:var(--tx2);margin-bottom:24px}
+.card{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--radl);padding:20px;margin-bottom:16px}
+.ct{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ct i{color:var(--t400)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+.inp{padding:9px 12px;border:0.5px solid var(--bd2);border-radius:var(--rad);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);outline:none;width:100%}
+.inp:focus{border-color:var(--t400)}
+textarea.inp{resize:vertical;min-height:70px}
+.f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.f label{font-size:12px;font-weight:500;color:var(--tx2)}
+.f input,.f select,.f textarea{padding:9px 12px;border:0.5px solid var(--bd2);border-radius:var(--rad);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);outline:none;width:100%}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--t400)}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--bd)}
+.tog-row:last-child{border-bottom:none}
+.tog-info{font-size:13px;color:var(--tx)}
+.tog-info small{display:block;font-size:11px;color:var(--tx3);margin-top:1px}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:var(--bd2);border-radius:99px;cursor:pointer;transition:.2s}
+.tog-sl:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
+.tog input:checked+.tog-sl{background:var(--t400)}
+.tog input:checked+.tog-sl:before{transform:translateX(16px)}
+.save-btn{padding:10px 22px;background:var(--t400);color:white;border:none;border-radius:var(--rad);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.save-btn:hover{background:var(--t600)}
+.save-row{display:flex;align-items:center;gap:12px;margin-top:8px}
+.saved-msg{font-size:12px;color:var(--t400);display:none}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--radl);padding:14px}
+.kpi-n{font-size:22px;font-weight:500}
+.kpi-l{font-size:11px;color:var(--tx2);margin-top:2px}
+.kpi-s{font-size:11px;color:var(--t400);margin-top:2px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.cc{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--radl);padding:18px}
+.ct2{font-size:11px;font-weight:600;color:var(--tx2);letter-spacing:.4px;text-transform:uppercase;margin-bottom:14px}
+.br{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bl{font-size:12px;color:var(--tx2);min-width:48px;text-align:right}
+.bt{flex:1;height:7px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.bf{height:100%;background:var(--t400);border-radius:4px}
+.bv{font-size:12px;color:var(--tx);min-width:44px;text-align:right;font-weight:500}
+.sl{font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.tx-table{width:100%;border-collapse:collapse;border:0.5px solid var(--bd);border-radius:var(--radl);overflow:hidden;font-size:13px}
+.tx-table thead{background:var(--bg2)}
+.tx-table th{padding:9px 12px;text-align:left;font-size:11px;font-weight:500;color:var(--tx2);border-bottom:0.5px solid var(--bd);letter-spacing:.3px}
+.tx-table td{padding:9px 12px;border-bottom:0.5px solid var(--bd);color:var(--tx)}
+.tx-table tr:last-child td{border-bottom:none}
+.tx-table tr:hover td{background:var(--bg2)}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500}
+.pill-ok{background:#E1F5EE;color:#085041}
+.mc{border:0.5px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px}
+.mh{display:flex;align-items:center;justify-content:space-between}
+.mn{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+.mi{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.mb{display:none}
+.mb.open{display:block;padding-top:12px}
+.mhint{font-size:11px;color:var(--tx3);margin-bottom:8px;line-height:1.5}
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.sw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.sw.active{border-color:var(--tx);transform:scale(1.15)}
+.amt-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.at{display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--t50);color:var(--t800);border:0.5px solid var(--t100);border-radius:99px;font-size:12px;font-weight:500}
+.at button{background:none;border:none;cursor:pointer;color:var(--t600);font-size:13px;line-height:1}
+.add-row{display:flex;gap:6px}
+.prog-wrap{background:var(--bg2);border-radius:99px;height:10px;overflow:hidden;margin:8px 0}
+.prog-fill{height:100%;background:var(--t400);border-radius:99px;transition:width .4s}
+.logo-preview{width:100%;max-height:80px;object-fit:contain;border-radius:var(--rad);border:0.5px solid var(--bd);padding:8px;background:white;display:none;margin-top:8px}
+.sync-btn{padding:8px 16px;background:var(--t50);color:var(--t800);border:0.5px solid var(--t100);border-radius:var(--rad);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.sync-btn:hover{background:var(--t100)}
+.live-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--t400);background:var(--t50);border:0.5px solid var(--t100);padding:3px 8px;border-radius:99px}
+@media(max-width:700px){.sb{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.charts-row{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-logo">Give<span>Flow</span> <span style="font-size:12px;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--tx3)">Admin</span></div>
+  <div class="nav-r" id="nav-r" style="display:none">
+    <span class="live-badge"><span style="width:6px;height:6px;border-radius:50%;background:var(--t400);display:inline-block"></span> Live</span>
+    <span class="badge"><i class="ti ti-shield-check"></i> Admin</span>
+    <button class="logout-btn" onclick="logout()"><i class="ti ti-logout"></i> Sign out</button>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-page">
+    <div class="login-wrap">
+      <div class="login-icon"><i class="ti ti-chart-bar"></i></div>
+      <h2 class="login-title">GiveFlow Admin</h2>
+      <p class="login-sub">Authorized access only</p>
+      <div class="lf"><label>Username</label><input type="text" id="lu" placeholder="email" onkeydown="if(event.key==='Enter')tryLogin()"></div>
+      <div class="lf"><label>Password</label><div class="pw-w"><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()"><button class="pw-eye" onclick="togglePw()" id="pw-eye"><i class="ti ti-eye"></i></button></div></div>
+      <div class="err" id="lerr"><i class="ti ti-alert-circle"></i> Incorrect credentials</div>
+      <button class="login-btn" onclick="tryLogin()">Enter dashboard <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <div class="layout">
+    <div class="sb">
+      <div class="sb-sec">Overview</div>
+      <div class="sb-item active" onclick="showTab('t-dash',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="sb-item" onclick="showTab('t-donations',this)"><i class="ti ti-heart"></i> Donations</div>
+      <div class="sb-sec">Configuration</div>
+      <div class="sb-item" onclick="showTab('t-identity',this)"><i class="ti ti-building"></i> Organization</div>
+      <div class="sb-item" onclick="showTab('t-page',this)"><i class="ti ti-file-text"></i> Page content</div>
+      <div class="sb-item" onclick="showTab('t-payments',this)"><i class="ti ti-credit-card"></i> Payment methods</div>
+      <div class="sb-item" onclick="showTab('t-amounts',this)"><i class="ti ti-coins"></i> Amounts</div>
+      <div class="sb-item" onclick="showTab('t-campaign',this)"><i class="ti ti-target"></i> Campaign</div>
+      <div class="sb-sec">Tools</div>
+      <div class="sb-item" onclick="showTab('t-qr',this)"><i class="ti ti-qrcode"></i> QR Code</div>
+    </div>
+
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div id="t-dash" class="tab">
+        <h1 class="pt">Dashboard</h1><p class="ps">Real-time overview of your donation activity</p>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-n" id="d-total">₪0</div><div class="kpi-l">Total raised</div><div class="kpi-s">This month</div></div>
+          <div class="kpi"><div class="kpi-n" id="d-donors">0</div><div class="kpi-l">Donors</div><div class="kpi-s" id="d-today">+0 today</div></div>
+          <div class="kpi"><div class="kpi-n" id="d-avg">₪0</div><div class="kpi-l">Avg donation</div><div class="kpi-s">&nbsp;</div></div>
+          <div class="kpi"><div class="kpi-n" id="d-methods">—</div><div class="kpi-l">Active methods</div><div class="kpi-s">&nbsp;</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="cc"><div class="ct2">Monthly donations</div>
+            <div class="br"><div class="bl">Jan</div><div class="bt"><div class="bf" style="width:55%"></div></div><div class="bv">₪6.8k</div></div>
+            <div class="br"><div class="bl">Feb</div><div class="bt"><div class="bf" style="width:42%"></div></div><div class="bv">₪5.2k</div></div>
+            <div class="br"><div class="bl">Mar</div><div class="bt"><div class="bf" style="width:70%"></div></div><div class="bv">₪8.7k</div></div>
+            <div class="br"><div class="bl">Apr</div><div class="bt"><div class="bf" style="width:60%"></div></div><div class="bv">₪7.4k</div></div>
+            <div class="br"><div class="bl">May</div><div class="bt"><div class="bf" style="width:80%"></div></div><div class="bv">₪9.9k</div></div>
+            <div class="br"><div class="bl">Jun</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">₪12.5k</div></div>
+          </div>
+          <div class="cc"><div class="ct2">By payment method</div>
+            <div class="br"><div class="bl">PayPal</div><div class="bt"><div class="bf" style="width:70%"></div></div><div class="bv">243</div></div>
+            <div class="br"><div class="bl">Bit</div><div class="bt"><div class="bf" style="width:45%"></div></div><div class="bv">74</div></div>
+            <div class="br"><div class="bl">PayBox</div><div class="bt"><div class="bf" style="width:20%"></div></div><div class="bv">30</div></div>
+          </div>
+        </div>
+        <div class="sl">Recent donations</div>
+        <table class="tx-table"><thead><tr><th>Donor</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>María G.</td><td>₪180</td><td>PayPal</td><td>Today 09:14</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>Anonymous</td><td>₪50</td><td>Bit</td><td>Today 08:52</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>David R.</td><td>₪360</td><td>PayPal</td><td>Today 08:30</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>Sara L.</td><td>₪100</td><td>PayBox</td><td>Yesterday</td><td><span class="pill pill-ok">Received</span></td></tr>
+        </tbody></table>
+      </div>
+
+      <!-- DONATIONS -->
+      <div id="t-donations" class="tab" style="display:none">
+        <h1 class="pt">All Donations</h1><p class="ps">Complete history</p>
+        <table class="tx-table"><thead><tr><th>ID</th><th>Donor</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>#4821</td><td>María G.</td><td>₪180</td><td>PayPal</td><td>Today 09:14</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>#4820</td><td>Anonymous</td><td>₪50</td><td>Bit</td><td>Today 08:52</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>#4819</td><td>David R.</td><td>₪360</td><td>PayPal</td><td>Today 08:30</td><td><span class="pill pill-ok">Received</span></td></tr>
+          <tr><td>#4818</td><td>Sara L.</td><td>₪100</td><td>PayBox</td><td>Yesterday</td><td><span class="pill pill-ok">Received</span></td></tr>
+        </tbody></table>
+      </div>
+
+      <!-- ORGANIZATION -->
+      <div id="t-identity" class="tab" style="display:none">
+        <h1 class="pt">Organization</h1><p class="ps">Identity shown on your donation page</p>
+        <div class="card">
+          <div class="ct"><i class="ti ti-building"></i> Basic info</div>
+          <div class="two-col">
+            <div class="f"><label>Organization name</label><input id="org-name" placeholder="e.g. City of Life Foundation"></div>
+            <div class="f"><label>Registration number</label><input id="org-reg" placeholder="e.g. 58-0461069"></div>
+          </div>
+          <div class="f"><label>Address & contact</label><input id="org-address" placeholder="e.g. רח׳ ניס 15, שדרות | 077-4220270"></div>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-photo"></i> Logo</div>
+          <div class="fl">Upload logo (PNG, JPG)</div>
+          <input type="file" accept="image/*" onchange="previewLogo(this)" style="font-size:13px">
+          <img id="logo-preview" class="logo-preview">
+          <p style="font-size:11px;color:var(--tx3);margin-top:8px">Appears as a banner below the GiveFlow header on the public page.</p>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-palette"></i> Brand color</div>
+          <div class="fl">Primary color (used for buttons and accents)</div>
+          <div class="color-row">
+            <div class="sw active" style="background:#1D9E75" onclick="setColor('#1D9E75',this)"></div>
+            <div class="sw" style="background:#185FA5" onclick="setColor('#185FA5',this)"></div>
+            <div class="sw" style="background:#BA7517" onclick="setColor('#BA7517',this)"></div>
+            <div class="sw" style="background:#8B5CF6" onclick="setColor('#8B5CF6',this)"></div>
+            <div class="sw" style="background:#D85A30" onclick="setColor('#D85A30',this)"></div>
+            <div class="sw" style="background:#1a1a18" onclick="setColor('#1a1a18',this)"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx2)">Custom: <input type="color" id="custom-color" value="#1D9E75" oninput="setColorCustom(this.value)" style="width:28px;height:28px;border:none;border-radius:50%;cursor:pointer;padding:0"></div>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-language"></i> Language</div>
+          <select id="page-lang" class="inp" style="max-width:220px">
+            <option value="he">עברית (Hebrew)</option>
+            <option value="en">English</option>
+            <option value="ru">Русский (Russian)</option>
+            <option value="es">Español (Spanish)</option>
+          </select>
+        </div>
+        <div class="save-row"><button class="save-btn" onclick="saveAll('identity')">Save changes</button><span class="saved-msg" id="sv-identity"><i class="ti ti-check"></i> Saved & live</span></div>
+      </div>
+
+      <!-- PAGE CONTENT -->
+      <div id="t-page" class="tab" style="display:none">
+        <h1 class="pt">Page content</h1><p class="ps">All text on the public donation page</p>
+        <div class="card">
+          <div class="ct"><i class="ti ti-heading"></i> Main text</div>
+          <div class="f"><label>Main title</label><input id="txt-title" placeholder="e.g. Make a difference today"></div>
+          <div class="f"><label>Subtitle</label><input id="txt-sub" placeholder="e.g. Your donation reaches those who need it most"></div>
+          <div class="f"><label>Donate button text</label><input id="txt-btn" placeholder="e.g. לתרומה" value="לתרומה"></div>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-check"></i> After donation</div>
+          <div class="f"><label>Thank you title</label><input id="txt-thanks-title" placeholder="e.g. תודה רבה!"></div>
+          <div class="f"><label>Thank you message</label><textarea id="txt-thanks-msg" placeholder="Your donation has been received and will make a real difference."></textarea></div>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-info-circle"></i> Footer</div>
+          <div class="f"><label>Footer note</label><textarea id="txt-footer" placeholder="e.g. עמותת עיר החיים ע״ר | מס׳ 58-0461069"></textarea></div>
+          <div class="f"><label>Security note</label><input id="txt-privacy" placeholder="e.g. Secure payment. Your details are never stored."></div>
+        </div>
+        <div class="save-row"><button class="save-btn" onclick="saveAll('page')">Save changes</button><span class="saved-msg" id="sv-page"><i class="ti ti-check"></i> Saved & live</span></div>
+      </div>
+
+      <!-- PAYMENT METHODS -->
+      <div id="t-payments" class="tab" style="display:none">
+        <h1 class="pt">Payment methods</h1><p class="ps">Enable and configure payment options</p>
+        <div class="mc">
+          <div class="mh">
+            <div class="mn"><div class="mi" style="background:#003087;color:white;font-weight:700">P</div> PayPal</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:11px;color:var(--t400)" id="st-paypal">● Active</span>
+              <label class="tog"><input type="checkbox" id="tog-paypal" checked onchange="toggleMethod('paypal')"><div class="tog-sl"></div></label>
+              <button style="background:none;border:none;cursor:pointer;color:var(--tx3)" onclick="toggleExpand('paypal')"><i class="ti ti-chevron-down" id="chev-paypal"></i></button>
+            </div>
+          </div>
+          <div class="mb open" id="mb-paypal">
+            <div class="mhint">Get your Client ID from developer.paypal.com → Apps & Credentials</div>
+            <div class="fl">PayPal Client ID</div>
+            <input class="inp" id="paypal-client-id" placeholder="Ac4FVlN...">
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mh">
+            <div class="mn"><div class="mi" style="background:#0070BA;color:white;font-size:11px;font-weight:700">bit</div> Bit</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:11px;color:var(--tx3)" id="st-bit">○ Inactive</span>
+              <label class="tog"><input type="checkbox" id="tog-bit" onchange="toggleMethod('bit')"><div class="tog-sl"></div></label>
+              <button style="background:none;border:none;cursor:pointer;color:var(--tx3)" onclick="toggleExpand('bit')"><i class="ti ti-chevron-down" id="chev-bit"></i></button>
+            </div>
+          </div>
+          <div class="mb" id="mb-bit">
+            <div class="mhint">Create a payment link in your Bit business account</div>
+            <div class="fl">Bit payment link</div>
+            <input class="inp" id="bit-link" placeholder="https://www.bitpay.co.il/app/p/XXXXX">
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mh">
+            <div class="mn"><div class="mi" style="background:#FF6B35;color:white;font-size:10px;font-weight:700">PB</div> PayBox</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:11px;color:var(--tx3)" id="st-paybox">○ Inactive</span>
+              <label class="tog"><input type="checkbox" id="tog-paybox" onchange="toggleMethod('paybox')"><div class="tog-sl"></div></label>
+              <button style="background:none;border:none;cursor:pointer;color:var(--tx3)" onclick="toggleExpand('paybox')"><i class="ti ti-chevron-down" id="chev-paybox"></i></button>
+            </div>
+          </div>
+          <div class="mb" id="mb-paybox">
+            <div class="mhint">Get your payment link from your PayBox business account</div>
+            <div class="fl">PayBox link</div>
+            <input class="inp" id="paybox-link" placeholder="https://payboxapp.page.link/XXXXX">
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mh">
+            <div class="mn"><div class="mi" style="background:#22C55E;color:white;font-size:11px;font-weight:700">G</div> Grow</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:11px;color:var(--tx3)" id="st-grow">○ Inactive</span>
+              <label class="tog"><input type="checkbox" id="tog-grow" onchange="toggleMethod('grow')"><div class="tog-sl"></div></label>
+              <button style="background:none;border:none;cursor:pointer;color:var(--tx3)" onclick="toggleExpand('grow')"><i class="ti ti-chevron-down" id="chev-grow"></i></button>
+            </div>
+          </div>
+          <div class="mb" id="mb-grow">
+            <div class="mhint">Get your payment page link from grow.business</div>
+            <div class="fl">Grow link</div>
+            <input class="inp" id="grow-link" placeholder="https://grow.business/p/XXXXX">
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mh">
+            <div class="mn"><div class="mi" style="background:#6B7280;color:white"><i class="ti ti-building-bank" style="font-size:13px"></i></div> Bank transfer</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:11px;color:var(--tx3)" id="st-bank">○ Inactive</span>
+              <label class="tog"><input type="checkbox" id="tog-bank" onchange="toggleMethod('bank')"><div class="tog-sl"></div></label>
+              <button style="background:none;border:none;cursor:pointer;color:var(--tx3)" onclick="toggleExpand('bank')"><i class="ti ti-chevron-down" id="chev-bank"></i></button>
+            </div>
+          </div>
+          <div class="mb" id="mb-bank">
+            <div class="two-col">
+              <div class="f"><label>Bank name</label><input id="bank-name" placeholder="e.g. Bank Leumi"></div>
+              <div class="f"><label>Branch</label><input id="bank-branch" placeholder="e.g. 800"></div>
+            </div>
+            <div class="two-col">
+              <div class="f"><label>Account number</label><input id="bank-account" placeholder="e.g. 12345678"></div>
+              <div class="f"><label>Account name</label><input id="bank-holder" placeholder="e.g. עמותת עיר החיים"></div>
+            </div>
+          </div>
+        </div>
+        <div class="save-row" style="margin-top:8px"><button class="save-btn" onclick="saveAll('payments')">Save methods</button><span class="saved-msg" id="sv-payments"><i class="ti ti-check"></i> Saved & live</span></div>
+      </div>
+
+      <!-- AMOUNTS -->
+      <div id="t-amounts" class="tab" style="display:none">
+        <h1 class="pt">Amounts & currency</h1><p class="ps">Configure suggested amounts and currency</p>
+        <div class="card">
+          <div class="ct"><i class="ti ti-currency-shekel"></i> Currency</div>
+          <select id="sel-currency" class="inp" style="max-width:200px">
+            <option value="ILS">₪ ILS — Israeli Shekel</option>
+            <option value="USD">$ USD — US Dollar</option>
+            <option value="EUR">€ EUR — Euro</option>
+            <option value="GBP">£ GBP — British Pound</option>
+          </select>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="ti ti-coins"></i> Preset amounts</div>
+          <div class="tog-row">
+            <div class="tog-info">Show preset amounts<small>Quick-select buttons on the donation page</small></div>
+            <label class="tog"><input type="checkbox" id="tog-presets" checked><div class="tog-sl"></div></label>
+          </div>
+          <div style="margin-top:14px">
+            <div class="fl">Current amounts</div>
+            <div class="amt-wrap" id="amt-wrap">
+              <span class="at">18 <button onclick="removeAmt(this)">×</button></span>
+              <span class="at">36 <button onclick="removeAmt(this)">×</button></span>
+              <span class="at">50 <button onclick="removeAmt(this)">×</button></span>
+              <span class="at">100 <button onclick="removeAmt(this)">×</button></span>
+              <span class="at">180 <button onclick="removeAmt(this)">×</button></span>
+              <span class="at">360 <button onclick="removeAmt(this)">×</button></span>
+            </div>
+            <div class="add-row">
+              <input class="inp" type="number" id="new-amt" placeholder="Add amount" min="1" style="max-width:120px">
+              <button class="save-btn" onclick="addAmt()">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="save-row"><button class="save-btn" onclick="saveAll('amounts')">Save changes</button><span class="saved-msg" id="sv-amounts"><i class="ti ti-check"></i> Saved & live</span></div>
+      </div>
+
+      <!-- CAMPAIGN -->
+      <div id="t-campaign" class="tab" style="display:none">
+        <h1 class="pt">Campaign</h1><p class="ps">Fundraising goal with progress bar</p>
+        <div class="card">
+          <div class="ct"><i class="ti ti-target"></i> Active campaign</div>
+          <div class="tog-row">
+            <div class="tog-info">Show campaign progress bar<small>Visible on the donation page</small></div>
+            <label class="tog"><input type="checkbox" id="tog-campaign"><div class="tog-sl"></div></label>
+          </div>
+          <div style="margin-top:16px">
+            <div class="f"><label>Campaign name</label><input id="camp-name" placeholder="e.g. Pesach 2025 Food Drive"></div>
+            <div class="two-col">
+              <div class="f"><label>Goal (₪)</label><input type="number" id="camp-goal" placeholder="50000"></div>
+              <div class="f"><label>Raised so far (₪)</label><input type="number" id="camp-raised" placeholder="12480" oninput="updateProgress()"></div>
+            </div>
+            <div class="f"><label>Deadline</label><input type="date" id="camp-deadline"></div>
+            <div>
+              <div class="fl">Progress preview</div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx2);margin-bottom:4px"><span id="prog-lbl">₪0 raised</span><span id="prog-pct">0%</span></div>
+              <div class="prog-wrap"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
+              <div style="font-size:11px;color:var(--tx3);margin-top:4px" id="prog-goal">of ₪0 goal</div>
+            </div>
+          </div>
+        </div>
+        <div class="save-row"><button class="save-btn" onclick="saveAll('campaign')">Save campaign</button><span class="saved-msg" id="sv-campaign"><i class="ti ti-check"></i> Saved & live</span></div>
+      </div>
+
+      <!-- QR -->
+      <div id="t-qr" class="tab" style="display:none">
+        <h1 class="pt">QR Code</h1><p class="ps">Print and display for in-person donations</p>
+        <div class="card" style="display:flex;gap:20px;align-items:center">
+          <div style="width:130px;height:130px;flex-shrink:0;background:white;border-radius:8px;border:0.5px solid var(--bd);padding:8px;display:flex;align-items:center;justify-content:center">
+            <svg viewBox="0 0 100 100" width="114" height="114" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="white"/>
+              <rect x="5" y="5" width="28" height="28" rx="3" fill="#0F6E56"/><rect x="9" y="9" width="20" height="20" rx="2" fill="white"/><rect x="13" y="13" width="12" height="12" rx="1" fill="#0F6E56"/>
+              <rect x="67" y="5" width="28" height="28" rx="3" fill="#0F6E56"/><rect x="71" y="9" width="20" height="20" rx="2" fill="white"/><rect x="75" y="13" width="12" height="12" rx="1" fill="#0F6E56"/>
+              <rect x="5" y="67" width="28" height="28" rx="3" fill="#0F6E56"/><rect x="9" y="71" width="20" height="20" rx="2" fill="white"/><rect x="13" y="75" width="12" height="12" rx="1" fill="#0F6E56"/>
+              <rect x="39" y="5" width="5" height="5" fill="#0F6E56"/><rect x="47" y="5" width="5" height="5" fill="#0F6E56"/><rect x="55" y="5" width="5" height="5" fill="#0F6E56"/>
+              <rect x="39" y="13" width="5" height="5" fill="#0F6E56"/><rect x="55" y="13" width="5" height="5" fill="#0F6E56"/><rect x="47" y="21" width="5" height="5" fill="#0F6E56"/>
+              <rect x="5" y="39" width="5" height="5" fill="#0F6E56"/><rect x="13" y="39" width="5" height="5" fill="#0F6E56"/><rect x="21" y="39" width="5" height="5" fill="#0F6E56"/>
+              <rect x="39" y="39" width="5" height="5" fill="#0F6E56"/><rect x="47" y="39" width="5" height="5" fill="#0F6E56"/><rect x="55" y="39" width="5" height="5" fill="#0F6E56"/>
+              <rect x="63" y="39" width="5" height="5" fill="#0F6E56"/><rect x="79" y="39" width="5" height="5" fill="#0F6E56"/><rect x="87" y="39" width="5" height="5" fill="#0F6E56"/>
+              <rect x="5" y="47" width="5" height="5" fill="#0F6E56"/><rect x="21" y="47" width="5" height="5" fill="#0F6E56"/>
+              <rect x="39" y="47" width="5" height="5" fill="#0F6E56"/><rect x="55" y="47" width="5" height="5" fill="#0F6E56"/><rect x="71" y="47" width="5" height="5" fill="#0F6E56"/><rect x="87" y="47" width="5" height="5" fill="#0F6E56"/>
+              <rect x="13" y="55" width="5" height="5" fill="#0F6E56"/><rect x="29" y="55" width="5" height="5" fill="#0F6E56"/>
+              <rect x="47" y="55" width="5" height="5" fill="#0F6E56"/><rect x="63" y="55" width="5" height="5" fill="#0F6E56"/><rect x="79" y="55" width="5" height="5" fill="#0F6E56"/>
+              <rect x="39" y="63" width="5" height="5" fill="#0F6E56"/><rect x="55" y="63" width="5" height="5" fill="#0F6E56"/><rect x="71" y="63" width="5" height="5" fill="#0F6E56"/>
+              <rect x="47" y="71" width="5" height="5" fill="#0F6E56"/><rect x="63" y="71" width="5" height="5" fill="#0F6E56"/><rect x="79" y="71" width="5" height="5" fill="#0F6E56"/><rect x="87" y="71" width="5" height="5" fill="#0F6E56"/>
+              <rect x="39" y="79" width="5" height="5" fill="#0F6E56"/><rect x="55" y="79" width="5" height="5" fill="#0F6E56"/><rect x="71" y="79" width="5" height="5" fill="#0F6E56"/>
+              <rect x="47" y="87" width="5" height="5" fill="#0F6E56"/><rect x="63" y="87" width="5" height="5" fill="#0F6E56"/><rect x="87" y="87" width="5" height="5" fill="#0F6E56"/>
+              <rect x="41" y="41" width="18" height="18" rx="3" fill="white"/><text x="50" y="54" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56" font-family="Georgia,serif">G</text>
+            </svg>
+          </div>
+          <div>
+            <div class="fl" style="margin-bottom:6px">Donation page URL</div>
+            <input class="inp" id="qr-url" value="https://aidbase.netlify.app/giveflow.html" style="max-width:360px;margin-bottom:12px"><br>
+            <button class="save-btn" onclick="window.print()"><i class="ti ti-printer"></i> Print QR</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+var SB_URL = "https://ynpacufijpcumloodjir.supabase.co";
+var SB_KEY = "sbpublishable_EyDKwtYUHdAWhSauesA90A_SO-Xv-FT";
+var sb = supabase.createClient(SB_URL, SB_KEY);
+var logoBase64 = null;
+
+function tryLogin() {
+  var u = document.getElementById('lu').value.trim();
+  var p = document.getElementById('lp').value;
+  if (u === 'iloffice@clm-israel.org' && p === 'Cityoflife2@') {
+    document.getElementById('lerr').style.display = 'none';
+    document.getElementById('nav-r').style.display = 'flex';
+    document.getElementById('screen-login').classList.remove('active');
+    document.getElementById('screen-app').classList.add('active');
+    loadSettings();
+  } else { document.getElementById('lerr').style.display = 'block'; }
+}
+
+function logout() {
+  document.getElementById('nav-r').style.display = 'none';
+  document.getElementById('lu').value = '';
+  document.getElementById('lp').value = '';
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+}
+
+function togglePw() {
+  var inp = document.getElementById('lp');
+  var eye = document.getElementById('pw-eye');
+  if (inp.type === 'password') { inp.type = 'text'; eye.innerHTML = '<i class="ti ti-eye-off"></i>'; }
+  else { inp.type = 'password'; eye.innerHTML = '<i class="ti ti-eye"></i>'; }
+}
+
+function showTab(id, el) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.style.display='none'; });
+  document.getElementById(id).style.display = 'block';
+  document.querySelectorAll('.sb-item').forEach(function(s){ s.classList.remove('active'); });
+  if (el) el.classList.add('active');
+}
+
+function toggleMethod(name) {
+  var on = document.getElementById('tog-'+name).checked;
+  var st = document.getElementById('st-'+name);
+  st.textContent = on ? '● Active' : '○ Inactive';
+  st.style.color = on ? 'var(--t400)' : 'var(--tx3)';
+}
+
+function toggleExpand(name) {
+  var mb = document.getElementById('mb-'+name);
+  var open = mb.classList.toggle('open');
+  mb.style.display = open ? 'block' : 'none';
+  document.getElementById('chev-'+name).style.transform = open ? 'rotate(180deg)' : '';
+}
+
+function removeAmt(btn) { btn.parentElement.remove(); }
+function addAmt() {
+  var v = document.getElementById('new-amt').value;
+  if (!v || isNaN(v)) return;
+  var tag = document.createElement('span'); tag.className = 'at';
+  tag.innerHTML = v + ' <button onclick="removeAmt(this)">×</button>';
+  document.getElementById('amt-wrap').appendChild(tag);
+  document.getElementById('new-amt').value = '';
+}
+
+function previewLogo(input) {
+  var preview = document.getElementById('logo-preview');
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) { preview.src = e.target.result; preview.style.display = 'block'; logoBase64 = e.target.result; };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function setColor(hex, el) {
+  document.querySelectorAll('.sw').forEach(function(s){ s.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('custom-color').value = hex;
+}
+function setColorCustom(hex) {
+  document.querySelectorAll('.sw').forEach(function(s){ s.classList.remove('active'); });
+}
+
+function updateProgress() {
+  var goal = parseFloat(document.getElementById('camp-goal').value) || 0;
+  var raised = parseFloat(document.getElementById('camp-raised').value) || 0;
+  var pct = goal > 0 ? Math.min(100, Math.round((raised/goal)*100)) : 0;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-lbl').textContent = '₪' + raised.toLocaleString() + ' raised';
+  document.getElementById('prog-goal').textContent = 'of ₪' + goal.toLocaleString() + ' goal';
+}
+
+function getAmounts() {
+  var tags = document.querySelectorAll('#amt-wrap .at');
+  return Array.from(tags).map(function(t){ return t.childNodes[0].textContent.trim(); }).join(',');
+}
+
+async function loadSettings() {
+  var r = await sb.from('giveflow_settings').select('*').eq('id','default').single();
+  if (!r.data) return;
+  var d = r.data;
+  if (d.org_name) document.getElementById('org-name').value = d.org_name;
+  if (d.org_reg) document.getElementById('org-reg').value = d.org_reg;
+  if (d.org_address) document.getElementById('org-address').value = d.org_address;
+  if (d.brand_color) document.getElementById('custom-color').value = d.brand_color;
+  if (d.page_lang) document.getElementById('page-lang').value = d.page_lang;
+  if (d.txt_title) document.getElementById('txt-title').value = d.txt_title;
+  if (d.txt_sub) document.getElementById('txt-sub').value = d.txt_sub;
+  if (d.txt_btn) document.getElementById('txt-btn').value = d.txt_btn;
+  if (d.txt_thanks_title) document.getElementById('txt-thanks-title').value = d.txt_thanks_title;
+  if (d.txt_thanks_msg) document.getElementById('txt-thanks-msg').value = d.txt_thanks_msg;
+  if (d.txt_footer) document.getElementById('txt-footer').value = d.txt_footer;
+  if (d.txt_privacy) document.getElementById('txt-privacy').value = d.txt_privacy;
+  if (d.currency) document.getElementById('sel-currency').value = d.currency;
+  if (d.preset_amounts) {
+    var wrap = document.getElementById('amt-wrap'); wrap.innerHTML = '';
+    d.preset_amounts.split(',').forEach(function(a){ if(!a.trim()) return; var tag = document.createElement('span'); tag.className='at'; tag.innerHTML=a.trim()+' <button onclick="removeAmt(this)">×</button>'; wrap.appendChild(tag); });
+  }
+  if (d.show_presets !== null) document.getElementById('tog-presets').checked = d.show_presets;
+  if (d.paypal_client_id) document.getElementById('paypal-client-id').value = d.paypal_client_id;
+  if (d.paypal_enabled !== null) { document.getElementById('tog-paypal').checked = d.paypal_enabled; toggleMethod('paypal'); }
+  if (d.bit_link) document.getElementById('bit-link').value = d.bit_link;
+  if (d.bit_enabled !== null) { document.getElementById('tog-bit').checked = d.bit_enabled; toggleMethod('bit'); }
+  if (d.paybox_link) document.getElementById('paybox-link').value = d.paybox_link;
+  if (d.paybox_enabled !== null) { document.getElementById('tog-paybox').checked = d.paybox_enabled; toggleMethod('paybox'); }
+  if (d.grow_link) document.getElementById('grow-link').value = d.grow_link;
+  if (d.grow_enabled !== null) { document.getElementById('tog-grow').checked = d.grow_enabled; toggleMethod('grow'); }
+  if (d.bank_name) document.getElementById('bank-name').value = d.bank_name;
+  if (d.bank_branch) document.getElementById('bank-branch').value = d.bank_branch;
+  if (d.bank_account) document.getElementById('bank-account').value = d.bank_account;
+  if (d.bank_holder) document.getElementById('bank-holder').value = d.bank_holder;
+  if (d.bank_enabled !== null) { document.getElementById('tog-bank').checked = d.bank_enabled; toggleMethod('bank'); }
+  if (d.camp_name) document.getElementById('camp-name').value = d.camp_name;
+  if (d.camp_goal) document.getElementById('camp-goal').value = d.camp_goal;
+  if (d.camp_raised) document.getElementById('camp-raised').value = d.camp_raised;
+  if (d.camp_deadline) document.getElementById('camp-deadline').value = d.camp_deadline;
+  if (d.camp_enabled !== null) document.getElementById('tog-campaign').checked = d.camp_enabled;
+  if (d.qr_url) document.getElementById('qr-url').value = d.qr_url;
+  updateProgress();
+  // dashboard
+  var methods = [d.paypal_enabled,d.bit_enabled,d.paybox_enabled,d.grow_enabled,d.bank_enabled].filter(Boolean).length;
+  document.getElementById('d-methods').textContent = methods || '—';
+}
+
+async function saveAll(section) {
+  var payload = { id: 'default', updated_at: new Date().toISOString() };
+  payload.org_name = document.getElementById('org-name').value;
+  payload.org_reg = document.getElementById('org-reg').value;
+  payload.org_address = document.getElementById('org-address').value;
+  payload.brand_color = document.getElementById('custom-color').value;
+  payload.page_lang = document.getElementById('page-lang').value;
+  payload.txt_title = document.getElementById('txt-title').value;
+  payload.txt_sub = document.getElementById('txt-sub').value;
+  payload.txt_btn = document.getElementById('txt-btn').value;
+  payload.txt_thanks_title = document.getElementById('txt-thanks-title').value;
+  payload.txt_thanks_msg = document.getElementById('txt-thanks-msg').value;
+  payload.txt_footer = document.getElementById('txt-footer').value;
+  payload.txt_privacy = document.getElementById('txt-privacy').value;
+  payload.currency = document.getElementById('sel-currency').value;
+  payload.preset_amounts = getAmounts();
+  payload.show_presets = document.getElementById('tog-presets').checked;
+  payload.paypal_client_id = document.getElementById('paypal-client-id').value;
+  payload.paypal_enabled = document.getElementById('tog-paypal').checked;
+  payload.bit_link = document.getElementById('bit-link').value;
+  payload.bit_enabled = document.getElementById('tog-bit').checked;
+  payload.paybox_link = document.getElementById('paybox-link').value;
+  payload.paybox_enabled = document.getElementById('tog-paybox').checked;
+  payload.grow_link = document.getElementById('grow-link').value;
+  payload.grow_enabled = document.getElementById('tog-grow').checked;
+  payload.bank_name = document.getElementById('bank-name').value;
+  payload.bank_branch = document.getElementById('bank-branch').value;
+  payload.bank_account = document.getElementById('bank-account').value;
+  payload.bank_holder = document.getElementById('bank-holder').value;
+  payload.bank_enabled = document.getElementById('tog-bank').checked;
+  payload.camp_name = document.getElementById('camp-name').value;
+  payload.camp_goal = parseFloat(document.getElementById('camp-goal').value) || 0;
+  payload.camp_raised = parseFloat(document.getElementById('camp-raised').value) || 0;
+  payload.camp_deadline = document.getElementById('camp-deadline').value || null;
+  payload.camp_enabled = document.getElementById('tog-campaign').checked;
+  payload.qr_url = document.getElementById('qr-url').value;
+  if (logoBase64) payload.org_logo = logoBase64;
+  await sb.from('giveflow_settings').upsert(payload);
+  var msg = document.getElementById('sv-'+section);
+  if (msg) { msg.style.display = 'inline'; setTimeout(function(){ msg.style.display='none'; }, 2500); }
+}
+
+document.getElementById('t-dash').style.display = 'block';
+</script>
+</body>
+</html>
